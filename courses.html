@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextGen Technology – Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080E1C;--surface:#0D1525;--surface2:#111D32;--surface3:#162038;
+  --cyan:#00C8F8;--cyan-dim:rgba(0,200,248,.12);--cyan-glow:rgba(0,200,248,.25);
+  --emerald:#00E5A0;--emerald-dim:rgba(0,229,160,.1);
+  --amber:#FFB547;--amber-dim:rgba(255,181,71,.1);
+  --rose:#FF6B8A;--rose-dim:rgba(255,107,138,.1);
+  --purple:#A080FF;--purple-dim:rgba(160,128,255,.1);
+  --text:#E8EEF8;--text2:#8A9BBE;--text3:#4A5A7A;
+  --border:rgba(255,255,255,.06);--border2:rgba(0,200,248,.15);
+  --sidebar-w:260px;
+}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-logo{padding:28px 24px 24px;border-bottom:1px solid var(--border)}
+.logo-mark{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),#0080FF);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px var(--cyan-glow)}
+.logo-text{font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;letter-spacing:.3px}
+.logo-text span{color:var(--cyan)}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.sidebar-nav{padding:20px 12px;flex:1}
+.nav-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:0 12px;margin:16px 0 8px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .2s;text-decoration:none;margin-bottom:2px;position:relative}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--cyan-dim);color:var(--cyan);border:1px solid var(--border2)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--cyan);border-radius:0 3px 3px 0;box-shadow:0 0 8px var(--cyan)}
+.nav-icon{width:18px;height:18px;flex-shrink:0;font-size:15px}
+.nav-badge{margin-left:auto;background:var(--cyan);color:var(--bg);font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;cursor:pointer;transition:background .2s}
+.user-card:hover{background:var(--surface2)}
+.user-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0080FF,var(--cyan));display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:var(--bg);flex-shrink:0}
+.user-name{font-size:13px;font-weight:600}
+.user-role{font-size:10px;color:var(--text3)}
+.user-more{margin-left:auto;color:var(--text3);font-size:16px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:68px;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,14,28,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:'Outfit',sans-serif;font-size:20px;font-weight:600}
+.topbar-left p{font-size:12px;color:var(--text2);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 16px;width:220px}
+.topbar-search input{background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%}
+.topbar-search input::placeholder{color:var(--text3)}
+.tb-btn{width:38px;height:38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s}
+.tb-btn:hover{border-color:var(--border2)}
+.content{padding:32px;flex:1}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);margin-bottom:24px}
+.breadcrumb a{color:var(--text3);text-decoration:none}
+.breadcrumb a:hover{color:var(--cyan)}
+.breadcrumb span{color:var(--text)}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.page-title{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;margin-bottom:6px}
+.page-title span{color:var(--cyan)}
+.page-sub{font-size:13px;color:var(--text2)}
+.btn{padding:10px 20px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-cyan{background:var(--cyan);color:var(--bg)}
+.btn-cyan:hover{box-shadow:0 0 20px var(--cyan-glow);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+
+/* FILTER ROW */
+.filter-row{display:flex;gap:10px;align-items:center;margin-bottom:28px;flex-wrap:wrap}
+.filter-chip{padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
+.filter-chip:hover{border-color:var(--border2);color:var(--text);background:var(--surface2)}
+.filter-chip.active{background:var(--cyan-dim);border-color:var(--cyan);color:var(--cyan)}
+.filter-divider{width:1px;height:24px;background:var(--border)}
+.sort-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:var(--text2);outline:none;cursor:pointer;margin-left:auto}
+.sort-select option{background:var(--surface)}
+.results-count{font-size:12px;color:var(--text3)}
+
+/* COURSE GRID */
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.course-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;cursor:pointer;display:flex;flex-direction:column}
+.course-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.course-banner{height:140px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:16px}
+.cb-1{background:linear-gradient(135deg,#001A30,#003A60,#006090)}
+.cb-2{background:linear-gradient(135deg,#001A20,#003A30,#006050)}
+.cb-3{background:linear-gradient(135deg,#1A1000,#3A2800,#605000)}
+.cb-4{background:linear-gradient(135deg,#1A0010,#3A0030,#600060)}
+.cb-5{background:linear-gradient(135deg,#001000,#002800,#004800)}
+.cb-6{background:linear-gradient(135deg,#100020,#280040,#400080)}
+.cb-7{background:linear-gradient(135deg,#001820,#003640,#005060)}
+.cb-8{background:linear-gradient(135deg,#1A0800,#3A1800,#602800)}
+.course-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;opacity:.1;background:white}
+.course-banner::after{content:'';position:absolute;bottom:-20px;left:20px;width:80px;height:80px;border-radius:50%;opacity:.06;background:white}
+.course-emoji{position:absolute;top:16px;right:16px;font-size:32px;z-index:1}
+.course-level{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:6px;z-index:1;border:1px solid rgba(255,255,255,.2)}
+.lv-beginner{background:rgba(0,229,160,.2);color:var(--emerald)}
+.lv-intermediate{background:rgba(255,181,71,.2);color:var(--amber)}
+.lv-advanced{background:rgba(255,107,138,.2);color:var(--rose)}
+.course-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.course-category{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.course-title{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;margin-bottom:8px;line-height:1.3}
+.course-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;flex:1}
+.course-meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.meta-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.meta-icon{font-size:12px}
+.course-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.ctag{font-size:9px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--surface2);border:1px solid var(--border);color:var(--text3);letter-spacing:.3px}
+.course-footer{border-top:1px solid var(--border);padding-top:14px;display:flex;align-items:center;justify-content:space-between}
+.course-price-wrap{display:flex;flex-direction:column;gap:2px}
+.course-price{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
+.course-price-old{font-size:11px;color:var(--text3);text-decoration:line-through}
+.enroll-btn{padding:9px 18px;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .25s;white-space:nowrap}
+.enroll-btn.enrolled{background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(0,229,160,.3)}
+.enroll-btn.enroll-now{background:var(--cyan);color:var(--bg)}
+.enroll-btn.enroll-now:hover{box-shadow:0 0 16px var(--cyan-glow)}
+.course-rating{display:flex;align-items:center;gap:5px;margin-bottom:12px}
+.stars-val{color:#FFB547;font-size:12px;letter-spacing:1px}
+.rating-num{font-size:12px;font-weight:600;color:var(--text)}
+.rating-cnt{font-size:11px;color:var(--text3)}
+.enrolled-count{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px}
+.enrolled-faces{display:flex}
+.face{width:20px;height:20px;border-radius:50%;border:2px solid var(--surface);margin-left:-6px;font-size:9px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--bg);display:flex;align-items:center;justify-content:center}
+.face:first-child{margin-left:0}
+.f1{background:linear-gradient(135deg,#0080FF,var(--cyan))}
+.f2{background:linear-gradient(135deg,#00A060,var(--emerald))}
+.f3{background:linear-gradient(135deg,#CC8800,var(--amber))}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(6px);overflow-y:auto;padding:40px 20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;max-width:640px;width:100%;animation:modalIn .35s cubic-bezier(.34,1.3,.64,1);margin:auto}
+@keyframes modalIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-banner{height:160px;position:relative;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden}
+.modal-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(13,21,37,.9))}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;background:rgba(0,0,0,.5);border-radius:50%;border:none;cursor:pointer;color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;z-index:1}
+.modal-close:hover{background:rgba(255,107,138,.3);color:var(--rose)}
+.modal-body{padding:28px 32px 32px}
+.modal-category{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.modal-title{font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;margin-bottom:10px;line-height:1.2}
+.modal-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:20px}
+.modal-highlights{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.highlight-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;gap:10px;align-items:center}
+.h-icon{font-size:16px}
+.h-text strong{font-size:12px;font-weight:600;display:block;margin-bottom:2px}
+.h-text span{font-size:11px;color:var(--text3)}
+.syllabus-title{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;margin-bottom:14px}
+.syllabus-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.syl-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);padding:10px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.syl-num{font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;color:var(--cyan);width:20px;flex-shrink:0}
+.modal-footer{display:flex;gap:12px;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
+.modal-price{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;color:var(--cyan)}
+.modal-price-old{font-size:13px;color:var(--text3);text-decoration:line-through;margin-top:2px}
+.enroll-main-btn{flex:1;padding:14px;background:var(--cyan);color:var(--bg);border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:.5px}
+.enroll-main-btn:hover{box-shadow:0 0 24px var(--cyan-glow);transform:translateY(-1px)}
+
+/* ENROLLED STATE */
+.enroll-main-btn.enrolled-state{background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(0,229,160,.3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--surface);border:1px solid var(--emerald);border-radius:10px;padding:14px 20px;font-size:13px;z-index:300;opacity:0;transition:all .4s;display:flex;align-items:center;gap:10px;transform:translateX(20px)}
+.toast.show{opacity:1;transform:translateX(0)}
+
+/* ANIM */
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.course-card{opacity:0;animation:fadeIn .5s ease forwards}
+.course-card:nth-child(1){animation-delay:.05s}
+.course-card:nth-child(2){animation-delay:.1s}
+.course-card:nth-child(3){animation-delay:.15s}
+.course-card:nth-child(4){animation-delay:.2s}
+.course-card:nth-child(5){animation-delay:.25s}
+.course-card:nth-child(6){animation-delay:.3s}
+.course-card:nth-child(7){animation-delay:.35s}
+.course-card:nth-child(8){animation-delay:.4s}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">Next<span>Gen</span></div>
+        <div class="logo-sub">Technology</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main Menu</div>
+    <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
+    <a href="register.html" class="nav-item"><span class="nav-icon">👤</span> Student Register</a>
+    <a href="courses.html" class="nav-item active"><span class="nav-icon">📚</span> Courses <span class="nav-badge">8</span></a>
+    <div class="nav-label">Management</div>
+    <a href="#" class="nav-item"><span class="nav-icon">📊</span> Analytics</a>
+    <a href="#" class="nav-item"><span class="nav-icon">📅</span> Schedule</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🏆</span> Certificates</a>
+    <a href="#" class="nav-item"><span class="nav-icon">💬</span> Messages</a>
+    <div class="nav-label">System</div>
+    <a href="#" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    <a href="#" class="nav-item"><span class="nav-icon">❓</span> Help & Support</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">AD</div>
+      <div><div class="user-name">Admin User</div><div class="user-role">Super Administrator</div></div>
+      <div class="user-more">⋯</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Course Catalog</h1>
+      <p>Browse and manage all available courses</p>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search"><span>🔍</span><input type="text" id="search-input" placeholder="Search courses..." oninput="filterCourses()"></div>
+      <div class="tb-btn">🔔</div>
+      <div class="tb-btn">💬</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="breadcrumb">
+      <a href="index.html">Dashboard</a> <span>›</span> <span>Courses</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Our <span>Courses</span></h1>
+        <p class="page-sub">Industry-aligned programs crafted by expert instructors — enroll your students today</p>
+      </div>
+      <a href="register.html" class="btn btn-cyan">＋ Enroll Student</a>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter(this,'all')">All Courses <span id="count-all">8</span></button>
+      <button class="filter-chip" onclick="setFilter(this,'cloud')">☁️ Cloud</button>
+      <button class="filter-chip" onclick="setFilter(this,'dev')">💻 Development</button>
+      <button class="filter-chip" onclick="setFilter(this,'data')">📊 Data</button>
+      <button class="filter-chip" onclick="setFilter(this,'design')">🎨 Design</button>
+      <div class="filter-divider"></div>
+      <select class="sort-select" onchange="sortCourses(this.value)">
+        <option value="popular">Sort: Most Popular</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="newest">Newest First</option>
+      </select>
+    </div>
+    <div class="results-count" id="results-count" style="margin-bottom:20px">Showing 8 courses</div>
+
+    <!-- COURSE GRID -->
+    <div class="course-grid" id="course-grid">
+
+      <div class="course-card" data-cat="cloud" data-price="4999">
+        <div class="course-banner cb-1">
+          <span class="course-emoji">☁️</span>
+          <span class="course-level lv-beginner">Beginner</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Cloud Computing</div>
+          <div class="course-title">AWS Cloud Fundamentals</div>
+          <div class="course-rating"><span class="stars-val">★★★★★</span><span class="rating-num">4.9</span><span class="rating-cnt">(284 reviews)</span></div>
+          <div class="course-desc">Master Amazon Web Services — EC2, S3, Lambda, RDS, IAM and core cloud architecture patterns.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>60 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>12 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>284 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">EC2</span><span class="ctag">S3</span><span class="ctag">Lambda</span><span class="ctag">IAM</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f1">R</div><div class="face f2">P</div><div class="face f3">A</div></div>
+            <span>+281 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹4,999</div>
+              <div class="course-price-old">₹9,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(0,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="dev" data-price="5999">
+        <div class="course-banner cb-2">
+          <span class="course-emoji">⚛️</span>
+          <span class="course-level lv-intermediate">Intermediate</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Web Development</div>
+          <div class="course-title">React Development — Full Stack</div>
+          <div class="course-rating"><span class="stars-val">★★★★★</span><span class="rating-num">4.8</span><span class="rating-cnt">(198 reviews)</span></div>
+          <div class="course-desc">Build modern full-stack apps with React, Node.js, Express, MongoDB and deploy to AWS. Includes real projects.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>80 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>16 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>198 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">React</span><span class="ctag">Node.js</span><span class="ctag">MongoDB</span><span class="ctag">REST API</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f2">P</div><div class="face f3">A</div><div class="face f1">M</div></div>
+            <span>+195 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹5,999</div>
+              <div class="course-price-old">₹11,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(1,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="data" data-price="6999">
+        <div class="course-banner cb-3">
+          <span class="course-emoji">🤖</span>
+          <span class="course-level lv-intermediate">Intermediate</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Data Science & AI</div>
+          <div class="course-title">Python & Machine Learning</div>
+          <div class="course-rating"><span class="stars-val">★★★★★</span><span class="rating-num">4.9</span><span class="rating-cnt">(241 reviews)</span></div>
+          <div class="course-desc">From Python basics to advanced ML algorithms — supervised learning, neural networks, and real-world datasets.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>90 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>18 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>241 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">Python</span><span class="ctag">Pandas</span><span class="ctag">Scikit-learn</span><span class="ctag">TensorFlow</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f3">A</div><div class="face f1">N</div><div class="face f2">S</div></div>
+            <span>+238 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹6,999</div>
+              <div class="course-price-old">₹13,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(2,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="cloud" data-price="5499">
+        <div class="course-banner cb-4">
+          <span class="course-emoji">🐳</span>
+          <span class="course-level lv-advanced">Advanced</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Cloud & DevOps</div>
+          <div class="course-title">DevOps & Docker</div>
+          <div class="course-rating"><span class="stars-val">★★★★☆</span><span class="rating-num">4.7</span><span class="rating-cnt">(167 reviews)</span></div>
+          <div class="course-desc">CI/CD pipelines, Docker, Kubernetes, Jenkins, GitHub Actions — become a modern DevOps engineer.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>70 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>14 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>167 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">Docker</span><span class="ctag">Kubernetes</span><span class="ctag">Jenkins</span><span class="ctag">CI/CD</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f1">N</div><div class="face f2">R</div><div class="face f3">M</div></div>
+            <span>+164 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹5,499</div>
+              <div class="course-price-old">₹10,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(3,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="data" data-price="7999">
+        <div class="course-banner cb-5">
+          <span class="course-emoji">📊</span>
+          <span class="course-level lv-advanced">Advanced</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Data Analytics</div>
+          <div class="course-title">Data Science & Analytics</div>
+          <div class="course-rating"><span class="stars-val">★★★★★</span><span class="rating-num">4.8</span><span class="rating-cnt">(145 reviews)</span></div>
+          <div class="course-desc">Power BI, Tableau, SQL, statistical analysis, data visualization and business intelligence reporting at scale.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>75 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>15 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>145 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">Power BI</span><span class="ctag">Tableau</span><span class="ctag">SQL</span><span class="ctag">Python</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f2">S</div><div class="face f3">P</div><div class="face f1">K</div></div>
+            <span>+142 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹7,999</div>
+              <div class="course-price-old">₹15,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(4,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="design" data-price="3999">
+        <div class="course-banner cb-6">
+          <span class="course-emoji">🎨</span>
+          <span class="course-level lv-beginner">Beginner</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Design</div>
+          <div class="course-title">UI/UX Design Mastery</div>
+          <div class="course-rating"><span class="stars-val">★★★★☆</span><span class="rating-num">4.6</span><span class="rating-cnt">(122 reviews)</span></div>
+          <div class="course-desc">Figma, user research, wireframing, prototyping, design systems and usability testing for real products.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>55 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>11 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>122 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">Figma</span><span class="ctag">Prototyping</span><span class="ctag">UX Research</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f3">M</div><div class="face f1">V</div><div class="face f2">L</div></div>
+            <span>+119 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹3,999</div>
+              <div class="course-price-old">₹7,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(5,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="cloud" data-price="8999">
+        <div class="course-banner cb-7">
+          <span class="course-emoji">⚓</span>
+          <span class="course-level lv-advanced">Advanced</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Cloud Native</div>
+          <div class="course-title">Kubernetes & Cloud Native</div>
+          <div class="course-rating"><span class="stars-val">★★★★★</span><span class="rating-num">4.9</span><span class="rating-cnt">(89 reviews)</span></div>
+          <div class="course-desc">Production Kubernetes, Helm, service mesh, Prometheus monitoring, multi-cloud deployment strategies.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>85 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>17 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>89 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">K8s</span><span class="ctag">Helm</span><span class="ctag">Istio</span><span class="ctag">Prometheus</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f1">A</div><div class="face f2">D</div><div class="face f3">J</div></div>
+            <span>+86 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹8,999</div>
+              <div class="course-price-old">₹17,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(6,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card" data-cat="dev" data-price="5499">
+        <div class="course-banner cb-8">
+          <span class="course-emoji">☕</span>
+          <span class="course-level lv-intermediate">Intermediate</span>
+        </div>
+        <div class="course-body">
+          <div class="course-category">Backend Development</div>
+          <div class="course-title">Java Full Stack</div>
+          <div class="course-rating"><span class="stars-val">★★★★☆</span><span class="rating-num">4.7</span><span class="rating-cnt">(134 reviews)</span></div>
+          <div class="course-desc">Java, Spring Boot, Hibernate, REST APIs, Microservices, and Angular — enterprise-grade full stack development.</div>
+          <div class="course-meta">
+            <span class="meta-item"><span class="meta-icon">⏱️</span>95 hrs</span>
+            <span class="meta-item"><span class="meta-icon">🎯</span>19 modules</span>
+            <span class="meta-item"><span class="meta-icon">👥</span>134 enrolled</span>
+            <span class="meta-item"><span class="meta-icon">🏆</span>Certificate</span>
+          </div>
+          <div class="course-tags"><span class="ctag">Java</span><span class="ctag">Spring Boot</span><span class="ctag">Angular</span><span class="ctag">MySQL</span></div>
+          <div class="enrolled-count" style="margin-bottom:12px">
+            <div class="enrolled-faces"><div class="face f2">K</div><div class="face f3">T</div><div class="face f1">R</div></div>
+            <span>+131 students enrolled</span>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-wrap">
+              <div class="course-price">₹5,499</div>
+              <div class="course-price-old">₹10,999</div>
+            </div>
+            <button class="enroll-btn enroll-now" onclick="openModal(7,event)">Enroll Now</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- COURSE DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="course-modal">
+    <div class="modal-banner" id="modal-banner">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <span id="modal-emoji" style="position:relative;z-index:1;font-size:56px"></span>
+    </div>
+    <div class="modal-body">
+      <div class="modal-category" id="modal-cat"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="course-rating" style="margin-bottom:12px" id="modal-rating"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-highlights" id="modal-highlights"></div>
+      <div class="syllabus-title">What you'll learn</div>
+      <div class="syllabus-list" id="modal-syllabus"></div>
+      <div class="modal-footer">
+        <div>
+          <div class="modal-price" id="modal-price"></div>
+          <div class="modal-price-old" id="modal-price-old"></div>
+        </div>
+        <button class="enroll-main-btn" id="modal-enroll-btn">Enroll Student Now →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Student enrolled successfully!</div>
+
+<script>
+const courses=[
+  {title:'AWS Cloud Fundamentals',cat:'Cloud Computing',emoji:'☁️',bg:'cb-1',desc:'Master Amazon Web Services — EC2, S3, Lambda, RDS, IAM and core cloud architecture patterns for production deployments.',price:'₹4,999',old:'₹9,999',rating:'★★★★★',ratingNum:'4.9',reviews:'284',hrs:'60',modules:'12',enrolled:'284',
+   highlights:[{i:'⏱️',t:'Duration',s:'60 hours + projects'},{i:'🎯',t:'Skill Level',s:'Beginner friendly'},{i:'👨‍🏫',t:'Instructor',s:'Certified AWS SA'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['Cloud fundamentals & AWS overview','IAM — Users, Roles & Policies','EC2 instances & Auto Scaling','S3 storage, versioning & lifecycle','RDS, DynamoDB & database services','VPC, subnets & security groups','Lambda & serverless architecture','CloudFront, Route 53 & CDN','CloudWatch monitoring & alerts','Final project + certification exam']},
+  {title:'React Development — Full Stack',cat:'Web Development',emoji:'⚛️',bg:'cb-2',desc:'Build modern full-stack applications with React, Node.js, Express, MongoDB and deploy seamlessly to AWS with CI/CD pipelines.',price:'₹5,999',old:'₹11,999',rating:'★★★★★',ratingNum:'4.8',reviews:'198',hrs:'80',modules:'16',enrolled:'198',
+   highlights:[{i:'⏱️',t:'Duration',s:'80 hours + 5 projects'},{i:'🎯',t:'Skill Level',s:'Intermediate'},{i:'👨‍🏫',t:'Instructor',s:'Senior Dev'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['JavaScript ES6+ deep dive','React fundamentals & hooks','State management with Redux','REST API design with Express','MongoDB & Mongoose ODM','JWT authentication & security','React Router & code splitting','Testing with Jest & RTL','Docker & AWS deployment','Capstone full-stack project']},
+  {title:'Python & Machine Learning',cat:'Data Science & AI',emoji:'🤖',bg:'cb-3',desc:'From Python basics to advanced ML algorithms — supervised learning, neural networks, NLP and real-world datasets.',price:'₹6,999',old:'₹13,999',rating:'★★★★★',ratingNum:'4.9',reviews:'241',hrs:'90',modules:'18',enrolled:'241',
+   highlights:[{i:'⏱️',t:'Duration',s:'90 hours + labs'},{i:'🎯',t:'Skill Level',s:'Intermediate'},{i:'👨‍🏫',t:'Instructor',s:'PhD Data Scientist'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['Python for data science (NumPy, Pandas)','Data cleaning & visualization','Supervised learning algorithms','Unsupervised learning & clustering','Model evaluation & tuning','Neural networks with TensorFlow','Natural language processing','Computer vision basics','Model deployment with Flask','Capstone ML project']},
+  {title:'DevOps & Docker',cat:'Cloud & DevOps',emoji:'🐳',bg:'cb-4',desc:'CI/CD pipelines, Docker, Kubernetes, Jenkins, GitHub Actions — become a modern DevOps engineer.',price:'₹5,499',old:'₹10,999',rating:'★★★★☆',ratingNum:'4.7',reviews:'167',hrs:'70',modules:'14',enrolled:'167',
+   highlights:[{i:'⏱️',t:'Duration',s:'70 hours + labs'},{i:'🎯',t:'Skill Level',s:'Advanced'},{i:'👨‍🏫',t:'Instructor',s:'DevOps Architect'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['Linux fundamentals for DevOps','Docker containers & Dockerfile','Docker Compose & networking','Kubernetes architecture & pods','Helm charts & package management','Jenkins pipelines from scratch','GitHub Actions & CI/CD','Infrastructure as Code with Terraform','Monitoring with Prometheus & Grafana','Capstone DevOps pipeline project']},
+  {title:'Data Science & Analytics',cat:'Data Analytics',emoji:'📊',bg:'cb-5',desc:'Power BI, Tableau, SQL, statistical analysis, data visualization and business intelligence reporting at scale.',price:'₹7,999',old:'₹15,999',rating:'★★★★★',ratingNum:'4.8',reviews:'145',hrs:'75',modules:'15',enrolled:'145',
+   highlights:[{i:'⏱️',t:'Duration',s:'75 hours + projects'},{i:'🎯',t:'Skill Level',s:'Advanced'},{i:'👨‍🏫',t:'Instructor',s:'BI Lead @ Top MNC'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['SQL deep dive & advanced queries','Statistics & probability for analytics','Excel & Google Sheets mastery','Power BI dashboards & reports','Tableau visualizations','Python for data analysis','R language basics','Data warehousing concepts','ETL pipelines & automation','Business intelligence capstone']},
+  {title:'UI/UX Design Mastery',cat:'Design',emoji:'🎨',bg:'cb-6',desc:'Figma, user research, wireframing, prototyping, design systems and usability testing for real products.',price:'₹3,999',old:'₹7,999',rating:'★★★★☆',ratingNum:'4.6',reviews:'122',hrs:'55',modules:'11',enrolled:'122',
+   highlights:[{i:'⏱️',t:'Duration',s:'55 hours + portfolio'},{i:'🎯',t:'Skill Level',s:'Beginner'},{i:'👨‍🏫',t:'Instructor',s:'Lead Designer'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['Design thinking & UX principles','User research & persona creation','Information architecture','Wireframing techniques','Figma from scratch to advanced','Prototyping & micro-interactions','Design systems & components','Usability testing methods','Mobile-first responsive design','Portfolio project presentation']},
+  {title:'Kubernetes & Cloud Native',cat:'Cloud Native',emoji:'⚓',bg:'cb-7',desc:'Production Kubernetes, Helm, service mesh, Prometheus monitoring, multi-cloud deployment strategies.',price:'₹8,999',old:'₹17,999',rating:'★★★★★',ratingNum:'4.9',reviews:'89',hrs:'85',modules:'17',enrolled:'89',
+   highlights:[{i:'⏱️',t:'Duration',s:'85 hours + labs'},{i:'🎯',t:'Skill Level',s:'Advanced'},{i:'👨‍🏫',t:'Instructor',s:'CNCF Contributor'},{i:'🏆',t:'Certificate',s:'CKAD aligned'}],
+   syllabus:['Kubernetes architecture deep dive','Pods, deployments & services','ConfigMaps, Secrets & RBAC','Helm charts & release management','Istio service mesh','Horizontal pod autoscaling','Persistent volumes & storage','Multi-cluster management','Prometheus & Grafana stack','Production K8s capstone']},
+  {title:'Java Full Stack',cat:'Backend Development',emoji:'☕',bg:'cb-8',desc:'Java, Spring Boot, Hibernate, REST APIs, Microservices, and Angular — enterprise-grade full stack development.',price:'₹5,499',old:'₹10,999',rating:'★★★★☆',ratingNum:'4.7',reviews:'134',hrs:'95',modules:'19',enrolled:'134',
+   highlights:[{i:'⏱️',t:'Duration',s:'95 hours + projects'},{i:'🎯',t:'Skill Level',s:'Intermediate'},{i:'👨‍🏫',t:'Instructor',s:'Java Architect'},{i:'🏆',t:'Certificate',s:'Industry recognised'}],
+   syllabus:['Core Java & OOP principles','Java 17+ features','Spring Framework & Spring Boot','JPA & Hibernate ORM','Building REST APIs','Microservices with Spring Cloud','Angular 17 fundamentals','Angular + Spring Boot integration','MySQL & query optimisation','Enterprise capstone project']}
+];
+
+let enrolledSet=new Set();
+
+function openModal(i,e){
+  if(e)e.stopPropagation();
+  const c=courses[i];
+  document.getElementById('modal-banner').className='modal-banner '+c.bg;
+  document.getElementById('modal-emoji').textContent=c.emoji;
+  document.getElementById('modal-cat').textContent=c.cat;
+  document.getElementById('modal-title').textContent=c.title;
+  document.getElementById('modal-rating').innerHTML=`<span class="stars-val">${c.rating}</span><span class="rating-num">${c.ratingNum}</span><span class="rating-cnt">(${c.reviews} reviews)</span>`;
+  document.getElementById('modal-desc').textContent=c.desc;
+  document.getElementById('modal-price').textContent=c.price;
+  document.getElementById('modal-price-old').textContent=c.old;
+  document.getElementById('modal-highlights').innerHTML=c.highlights.map(h=>`<div class="highlight-item"><span class="h-icon">${h.i}</span><div class="h-text"><strong>${h.t}</strong><span>${h.s}</span></div></div>`).join('');
+  document.getElementById('modal-syllabus').innerHTML=c.syllabus.map((s,n)=>`<div class="syl-item"><span class="syl-num">${String(n+1).padStart(2,'0')}</span>${s}</div>`).join('');
+  const btn=document.getElementById('modal-enroll-btn');
+  if(enrolledSet.has(i)){btn.textContent='✓ Already Enrolled';btn.className='enroll-main-btn enrolled-state';}
+  else{btn.textContent='Enroll Student Now →';btn.className='enroll-main-btn';btn.onclick=()=>enrollCourse(i);}
+  document.getElementById('modal-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+function handleOverlayClick(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+function enrollCourse(i){
+  enrolledSet.add(i);
+  const card=document.querySelectorAll('.course-card')[i];
+  const btn=card.querySelector('.enroll-btn');
+  btn.textContent='✓ Enrolled';btn.className='enroll-btn enrolled';
+  document.getElementById('modal-enroll-btn').textContent='✓ Already Enrolled';
+  document.getElementById('modal-enroll-btn').className='enroll-main-btn enrolled-state';
+  showToast('✅ Student enrolled in '+courses[i].title+'!');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+let currentFilter='all';
+function setFilter(btn,cat){
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');currentFilter=cat;applyFilters();
+}
+function filterCourses(){applyFilters();}
+function applyFilters(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  const cards=document.querySelectorAll('.course-card');
+  let visible=0;
+  cards.forEach(card=>{
+    const catMatch=currentFilter==='all'||card.dataset.cat===currentFilter;
+    const title=card.querySelector('.course-title').textContent.toLowerCase();
+    const qMatch=!q||title.includes(q)||card.querySelector('.course-desc').textContent.toLowerCase().includes(q);
+    card.style.display=(catMatch&&qMatch)?'flex':'none';
+    if(catMatch&&qMatch)visible++;
+  });
+  document.getElementById('results-count').textContent=`Showing ${visible} course${visible!==1?'s':''}`;
+}
+function sortCourses(val){
+  const grid=document.getElementById('course-grid');
+  const cards=[...document.querySelectorAll('.course-card')];
+  cards.sort((a,b)=>{
+    if(val==='price-low')return parseInt(a.dataset.price)-parseInt(b.dataset.price);
+    if(val==='price-high')return parseInt(b.dataset.price)-parseInt(a.dataset.price);
+    return 0;
+  });
+  cards.forEach(c=>grid.appendChild(c));
+}
+</script>
+</body>
+</html>

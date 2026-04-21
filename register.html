@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextGen Technology – Student Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080E1C;--surface:#0D1525;--surface2:#111D32;--surface3:#162038;
+  --cyan:#00C8F8;--cyan-dim:rgba(0,200,248,.12);--cyan-glow:rgba(0,200,248,.25);
+  --emerald:#00E5A0;--emerald-dim:rgba(0,229,160,.1);
+  --amber:#FFB547;--rose:#FF6B8A;--rose-dim:rgba(255,107,138,.1);
+  --text:#E8EEF8;--text2:#8A9BBE;--text3:#4A5A7A;
+  --border:rgba(255,255,255,.06);--border2:rgba(0,200,248,.15);
+  --sidebar-w:260px;
+}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);display:flex}
+
+/* SIDEBAR — shared */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-logo{padding:28px 24px 24px;border-bottom:1px solid var(--border)}
+.logo-mark{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),#0080FF);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px var(--cyan-glow)}
+.logo-text{font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;letter-spacing:.3px}
+.logo-text span{color:var(--cyan)}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.sidebar-nav{padding:20px 12px;flex:1}
+.nav-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:0 12px;margin:16px 0 8px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .2s;text-decoration:none;margin-bottom:2px;position:relative}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--cyan-dim);color:var(--cyan);border:1px solid var(--border2)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--cyan);border-radius:0 3px 3px 0;box-shadow:0 0 8px var(--cyan)}
+.nav-icon{width:18px;height:18px;flex-shrink:0;font-size:15px}
+.nav-badge{margin-left:auto;background:var(--cyan);color:var(--bg);font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;cursor:pointer;transition:background .2s}
+.user-card:hover{background:var(--surface2)}
+.user-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0080FF,var(--cyan));display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:var(--bg);flex-shrink:0}
+.user-name{font-size:13px;font-weight:600}
+.user-role{font-size:10px;color:var(--text3)}
+.user-more{margin-left:auto;color:var(--text3);font-size:16px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:68px;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,14,28,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:'Outfit',sans-serif;font-size:20px;font-weight:600}
+.topbar-left p{font-size:12px;color:var(--text2);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.tb-btn{width:38px;height:38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s}
+.tb-btn:hover{border-color:var(--border2)}
+.content{padding:32px;flex:1}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);margin-bottom:24px}
+.breadcrumb a{color:var(--text3);text-decoration:none}
+.breadcrumb a:hover{color:var(--cyan)}
+.breadcrumb span{color:var(--text)}
+
+/* STEPS INDICATOR */
+.steps-indicator{display:flex;align-items:center;gap:0;margin-bottom:32px}
+.step{display:flex;align-items:center;gap:10px}
+.step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;border:2px solid var(--border);color:var(--text3);transition:all .3s;flex-shrink:0}
+.step.done .step-circle{background:var(--emerald);border-color:var(--emerald);color:var(--bg)}
+.step.active .step-circle{background:var(--cyan);border-color:var(--cyan);color:var(--bg);box-shadow:0 0 16px var(--cyan-glow)}
+.step-label{font-size:12px;font-weight:500;color:var(--text3)}
+.step.done .step-label,.step.active .step-label{color:var(--text)}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 12px;min-width:40px;transition:background .3s}
+.step-line.done{background:var(--emerald)}
+.step-line.active{background:var(--cyan)}
+
+/* FORM LAYOUT */
+.form-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.form-section{padding:28px 32px;border-bottom:1px solid var(--border)}
+.form-section:last-child{border-bottom:none}
+.form-section-title{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fst-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--cyan-dim);border:1px solid rgba(0,200,248,.2)}
+.form-section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;padding-left:36px}
+
+/* FORM FIELDS */
+.field-row{display:grid;gap:16px;margin-bottom:16px}
+.field-row.cols-2{grid-template-columns:1fr 1fr}
+.field-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:4px}
+.req{color:var(--cyan);font-size:12px}
+.field input,.field select,.field textarea{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .25s,box-shadow .25s;width:100%;appearance:none}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A5A7A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-dim)}
+.field input.error{border-color:var(--rose)}
+.field textarea{resize:vertical;min-height:80px}
+.field-hint{font-size:11px;color:var(--text3);margin-top:2px}
+.field-error{font-size:11px;color:var(--rose);margin-top:2px;display:none}
+.field-error.show{display:block}
+.field input.valid,.field select.valid{border-color:rgba(0,229,160,.4)}
+
+/* GENDER RADIO */
+.radio-group{display:flex;gap:8px}
+.radio-opt{flex:1;position:relative}
+.radio-opt input{position:absolute;opacity:0;pointer-events:none}
+.radio-opt label{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .2s;font-weight:500}
+.radio-opt input:checked + label{background:var(--cyan-dim);border-color:var(--cyan);color:var(--cyan)}
+
+/* PHOTO UPLOAD */
+.photo-upload{display:flex;align-items:center;gap:16px;padding:16px;background:var(--surface2);border:1px dashed var(--border);border-radius:12px;cursor:pointer;transition:border-color .2s}
+.photo-upload:hover{border-color:rgba(0,200,248,.3)}
+.photo-preview{width:64px;height:64px;border-radius:12px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.photo-text strong{font-size:13px;font-weight:500;color:var(--text);display:block;margin-bottom:4px}
+.photo-text span{font-size:11px;color:var(--text3)}
+.photo-btn{margin-left:auto;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--cyan);font-size:11px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap}
+
+/* SUBMIT AREA */
+.form-actions{padding:24px 32px;background:rgba(0,200,248,.03);border-top:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.btn{padding:11px 24px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-cyan{background:var(--cyan);color:var(--bg)}
+.btn-cyan:hover{box-shadow:0 0 24px var(--cyan-glow);transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+.save-note{font-size:11px;color:var(--text3);margin-left:auto}
+
+/* SIDEBAR CARD */
+.info-cards{display:flex;flex-direction:column;gap:16px}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+.ic-title{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ic-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+.requirements-list{display:flex;flex-direction:column;gap:10px}
+.req-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text2);line-height:1.5}
+.req-icon{font-size:14px;flex-shrink:0;margin-top:0px}
+.enrolled-list{display:flex;flex-direction:column;gap:10px}
+.enrolled-item{display:flex;align-items:center;gap:10px}
+.en-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--bg);flex-shrink:0}
+.en-a{background:linear-gradient(135deg,#0080FF,var(--cyan))}
+.en-b{background:linear-gradient(135deg,#00A060,var(--emerald))}
+.en-c{background:linear-gradient(135deg,#CC8800,var(--amber))}
+.en-name{font-size:12px;font-weight:500;color:var(--text)}
+.en-time{font-size:10px;color:var(--text3)}
+.en-time-ml{margin-left:auto;font-size:10px;color:var(--text3)}
+
+/* SUCCESS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:48px;text-align:center;max-width:400px;width:90%;animation:modalIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:56px;margin-bottom:20px;animation:bounce .6s .2s both}
+@keyframes bounce{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.modal h2{font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+.modal h2 span{color:var(--cyan)}
+.modal p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:28px}
+.student-id-box{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:28px}
+.sid-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.sid-val{font-family:'Outfit',sans-serif;font-size:22px;font-weight:700;color:var(--cyan)}
+.modal-actions{display:flex;gap:12px;justify-content:center}
+
+/* ANIM */
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .5s ease forwards}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">Next<span>Gen</span></div>
+        <div class="logo-sub">Technology</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main Menu</div>
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">⊞</span> Dashboard
+    </a>
+    <a href="register.html" class="nav-item active">
+      <span class="nav-icon">👤</span> Student Register
+    </a>
+    <a href="courses.html" class="nav-item">
+      <span class="nav-icon">📚</span> Courses
+      <span class="nav-badge">8</span>
+    </a>
+    <div class="nav-label">Management</div>
+    <a href="#" class="nav-item"><span class="nav-icon">📊</span> Analytics</a>
+    <a href="#" class="nav-item"><span class="nav-icon">📅</span> Schedule</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🏆</span> Certificates</a>
+    <a href="#" class="nav-item"><span class="nav-icon">💬</span> Messages</a>
+    <div class="nav-label">System</div>
+    <a href="#" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    <a href="#" class="nav-item"><span class="nav-icon">❓</span> Help & Support</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">AD</div>
+      <div><div class="user-name">Admin User</div><div class="user-role">Super Administrator</div></div>
+      <div class="user-more">⋯</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Student Registration</h1>
+      <p>Add a new student to NextGen Technology</p>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-btn">🔔</div>
+      <div class="tb-btn">💬</div>
+      <div class="tb-btn">👤</div>
+    </div>
+  </header>
+
+  <div class="content fade-in">
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+      <a href="index.html">Dashboard</a>
+      <span>›</span>
+      <span>Student Registration</span>
+    </div>
+
+    <!-- STEPS -->
+    <div class="steps-indicator" id="steps-indicator">
+      <div class="step done" id="step1">
+        <div class="step-circle">✓</div>
+        <div class="step-label">Personal Info</div>
+      </div>
+      <div class="step-line done" id="line1"></div>
+      <div class="step active" id="step2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Contact Details</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Course Selection</div>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step" id="step4">
+        <div class="step-circle">4</div>
+        <div class="step-label">Review & Submit</div>
+      </div>
+    </div>
+
+    <!-- FORM GRID -->
+    <div class="form-grid">
+
+      <div>
+        <form id="reg-form" novalidate>
+
+          <!-- PERSONAL INFO -->
+          <div class="form-card" style="margin-bottom:20px">
+            <div class="form-section">
+              <div class="form-section-title">
+                <div class="fst-icon">👤</div> Personal Information
+              </div>
+              <div class="form-section-sub">Enter the student's basic personal details</div>
+
+              <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
+                <div class="photo-preview" id="photo-preview">👤</div>
+                <div class="photo-text">
+                  <strong>Profile Photo</strong>
+                  <span>JPG, PNG or GIF — max 2MB</span>
+                </div>
+                <button type="button" class="photo-btn">Upload Photo</button>
+              </div>
+              <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+
+              <div style="height:18px"></div>
+
+              <div class="field-row cols-3">
+                <div class="field">
+                  <label>First Name <span class="req">*</span></label>
+                  <input type="text" id="fname" placeholder="Ravi" oninput="validateField(this)">
+                  <span class="field-error" id="fname-err">Required</span>
+                </div>
+                <div class="field">
+                  <label>Middle Name</label>
+                  <input type="text" id="mname" placeholder="Optional">
+                </div>
+                <div class="field">
+                  <label>Last Name <span class="req">*</span></label>
+                  <input type="text" id="lname" placeholder="Kumar" oninput="validateField(this)">
+                  <span class="field-error" id="lname-err">Required</span>
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Date of Birth <span class="req">*</span></label>
+                  <input type="date" id="dob" onchange="validateField(this)">
+                  <span class="field-error" id="dob-err">Required</span>
+                </div>
+                <div class="field">
+                  <label>Gender <span class="req">*</span></label>
+                  <div class="radio-group">
+                    <label class="radio-opt"><input type="radio" name="gender" value="male"> <label onclick="">👨 Male</label></label>
+                    <label class="radio-opt"><input type="radio" name="gender" value="female"> <label onclick="">👩 Female</label></label>
+                    <label class="radio-opt"><input type="radio" name="gender" value="other"> <label onclick="">🧑 Other</label></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Nationality</label>
+                  <select id="nationality">
+                    <option value="">Select nationality</option>
+                    <option value="IN" selected>Indian</option>
+                    <option value="US">American</option>
+                    <option value="GB">British</option>
+                    <option value="AU">Australian</option>
+                    <option value="CA">Canadian</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>ID / Aadhaar Number</label>
+                  <input type="text" id="id-num" placeholder="XXXX XXXX XXXX">
+                  <span class="field-hint">For verification purposes only</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT -->
+          <div class="form-card" style="margin-bottom:20px">
+            <div class="form-section">
+              <div class="form-section-title">
+                <div class="fst-icon">📞</div> Contact Information
+              </div>
+              <div class="form-section-sub">How should we reach this student?</div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Email Address <span class="req">*</span></label>
+                  <input type="email" id="email" placeholder="ravi@gmail.com" oninput="validateEmail(this)">
+                  <span class="field-error" id="email-err">Enter a valid email</span>
+                </div>
+                <div class="field">
+                  <label>Phone Number <span class="req">*</span></label>
+                  <input type="tel" id="phone" placeholder="+91 98765 43210" oninput="validatePhone(this)">
+                  <span class="field-error" id="phone-err">Enter a valid phone</span>
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Alternate Phone</label>
+                  <input type="tel" id="alt-phone" placeholder="+91 98765 43210">
+                </div>
+                <div class="field">
+                  <label>WhatsApp Number</label>
+                  <input type="tel" id="whatsapp" placeholder="Same as phone">
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>Current Address <span class="req">*</span></label>
+                  <textarea id="address" placeholder="Door No, Street, Area, City..." rows="2" oninput="validateField(this)"></textarea>
+                  <span class="field-error" id="address-err">Required</span>
+                </div>
+              </div>
+
+              <div class="field-row cols-3">
+                <div class="field">
+                  <label>City <span class="req">*</span></label>
+                  <input type="text" id="city" placeholder="Chennai" oninput="validateField(this)">
+                  <span class="field-error" id="city-err">Required</span>
+                </div>
+                <div class="field">
+                  <label>State</label>
+                  <select id="state">
+                    <option value="">Select state</option>
+                    <option value="TN" selected>Tamil Nadu</option>
+                    <option value="KA">Karnataka</option>
+                    <option value="MH">Maharashtra</option>
+                    <option value="DL">Delhi</option>
+                    <option value="KL">Kerala</option>
+                    <option value="AP">Andhra Pradesh</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>PIN Code</label>
+                  <input type="text" id="pin" placeholder="600001" maxlength="6">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACADEMIC -->
+          <div class="form-card" style="margin-bottom:20px">
+            <div class="form-section">
+              <div class="form-section-title">
+                <div class="fst-icon">🎓</div> Academic Background
+              </div>
+              <div class="form-section-sub">Previous education and qualifications</div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Highest Qualification <span class="req">*</span></label>
+                  <select id="qualification" onchange="validateField(this)">
+                    <option value="">Select qualification</option>
+                    <option value="10th">10th Standard</option>
+                    <option value="12th">12th / HSC</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="ug">Under Graduate (UG)</option>
+                    <option value="pg">Post Graduate (PG)</option>
+                    <option value="phd">PhD / Doctorate</option>
+                  </select>
+                  <span class="field-error" id="qualification-err">Required</span>
+                </div>
+                <div class="field">
+                  <label>Specialization / Field</label>
+                  <input type="text" id="specialization" placeholder="Computer Science, B.Tech...">
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Institution Name</label>
+                  <input type="text" id="institution" placeholder="Anna University, Chennai">
+                </div>
+                <div class="field">
+                  <label>Year of Passing</label>
+                  <select id="year-passing">
+                    <option value="">Select year</option>
+                    <option>2025</option><option>2024</option><option>2023</option>
+                    <option>2022</option><option>2021</option><option>2020</option>
+                    <option>2019</option><option>2018</option><option>Before 2018</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Work Experience</label>
+                  <select id="experience">
+                    <option value="0">Fresher (No experience)</option>
+                    <option value="1">Less than 1 year</option>
+                    <option value="2">1–2 years</option>
+                    <option value="3">3–5 years</option>
+                    <option value="5+">5+ years</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Current Company</label>
+                  <input type="text" id="company" placeholder="Optional — if employed">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COURSE SELECTION -->
+          <div class="form-card" style="margin-bottom:20px">
+            <div class="form-section">
+              <div class="form-section-title">
+                <div class="fst-icon">📚</div> Course Preference
+              </div>
+              <div class="form-section-sub">Which course is this student enrolling in?</div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Preferred Course <span class="req">*</span></label>
+                  <select id="course" onchange="validateField(this)">
+                    <option value="">Select a course</option>
+                    <option value="aws">AWS Cloud Fundamentals</option>
+                    <option value="react">React Development — Full Stack</option>
+                    <option value="python">Python & Machine Learning</option>
+                    <option value="devops">DevOps & Docker</option>
+                    <option value="data">Data Science & Analytics</option>
+                    <option value="uiux">UI/UX Design</option>
+                    <option value="k8s">Kubernetes & Cloud Native</option>
+                    <option value="java">Java Full Stack</option>
+                  </select>
+                  <span class="field-error" id="course-err">Please select a course</span>
+                </div>
+                <div class="field">
+                  <label>Batch Timing</label>
+                  <select id="batch">
+                    <option value="morning">Morning (8 AM – 11 AM)</option>
+                    <option value="afternoon">Afternoon (12 PM – 3 PM)</option>
+                    <option value="evening">Evening (6 PM – 9 PM)</option>
+                    <option value="weekend">Weekend (Sat & Sun)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-row cols-2">
+                <div class="field">
+                  <label>Payment Mode</label>
+                  <select id="payment">
+                    <option value="full">Full Payment</option>
+                    <option value="emi">EMI (3 months)</option>
+                    <option value="scholarship">Scholarship</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Referral Source</label>
+                  <select id="referral">
+                    <option value="">How did they hear about us?</option>
+                    <option value="friend">Friend / Referral</option>
+                    <option value="social">Social Media</option>
+                    <option value="google">Google Search</option>
+                    <option value="website">Our Website</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>Additional Notes</label>
+                  <textarea id="notes" placeholder="Any special requirements, prior knowledge, or notes about this student..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost" onclick="clearForm()">↺ Reset Form</button>
+              <button type="submit" class="btn btn-cyan" onclick="submitForm(event)">Register Student →</button>
+              <span class="save-note">🔒 Data is securely saved</span>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- SIDEBAR INFO -->
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="ic-title"><div class="ic-dot"></div>Registration Requirements</div>
+          <div class="requirements-list">
+            <div class="req-item"><span class="req-icon">📋</span>Valid government photo ID (Aadhaar / Passport)</div>
+            <div class="req-item"><span class="req-icon">🎓</span>Latest education certificate or marksheet</div>
+            <div class="req-item"><span class="req-icon">📷</span>Recent passport-size photograph</div>
+            <div class="req-item"><span class="req-icon">📱</span>Active mobile number for OTP verification</div>
+            <div class="req-item"><span class="req-icon">💰</span>Payment proof or fee receipt if pre-paid</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-title"><div class="ic-dot"></div>Quick Stats</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)">
+              <div style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:var(--cyan)">1,284</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Total Students</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)">
+              <div style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:var(--emerald)">24</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Active Courses</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)">
+              <div style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:var(--amber)">3</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Pending Today</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)">
+              <div style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:var(--rose)">6</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px">Enrolled Today</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-title"><div class="ic-dot"></div>Recent Registrations</div>
+          <div class="enrolled-list">
+            <div class="enrolled-item">
+              <div class="en-avatar en-a">RK</div>
+              <div><div class="en-name">Ravi Kumar</div><div class="en-time">AWS Cloud · 2 mins ago</div></div>
+            </div>
+            <div class="enrolled-item">
+              <div class="en-avatar en-b">PM</div>
+              <div><div class="en-name">Priya Menon</div><div class="en-time">React Dev · 1 hr ago</div></div>
+            </div>
+            <div class="enrolled-item">
+              <div class="en-avatar en-c">AS</div>
+              <div><div class="en-name">Arjun Singh</div><div class="en-time">Python ML · 3 hrs ago</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" style="background:linear-gradient(135deg,#0D1D3E,#0A1428);border-color:var(--border2)">
+          <div style="font-size:28px;margin-bottom:12px">💡</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;margin-bottom:8px;color:var(--cyan)">Pro Tip</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.7">After registration, students receive a welcome email with their Student ID and login credentials automatically. Ensure the email address is correct.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h2>Student <span>Registered!</span></h2>
+    <p>The student has been successfully registered at NextGen Technology. A welcome email with login credentials has been sent.</p>
+    <div class="student-id-box">
+      <div class="sid-label">Student ID</div>
+      <div class="sid-val" id="generated-id">NGT-2025-1285</div>
+    </div>
+    <div class="modal-actions">
+      <a href="index.html" class="btn btn-ghost">← Dashboard</a>
+      <button class="btn btn-cyan" onclick="closeModal()">Register Another</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function validateField(el){
+  const err=document.getElementById(el.id+'-err');
+  if(el.value.trim()){el.classList.add('valid');el.classList.remove('error');if(err)err.classList.remove('show')}
+  else{el.classList.remove('valid');el.classList.add('error');if(err)err.classList.add('show')}
+}
+function validateEmail(el){
+  const err=document.getElementById('email-err');const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+  if(ok){el.classList.add('valid');el.classList.remove('error');err.classList.remove('show')}
+  else{el.classList.remove('valid');if(el.value){el.classList.add('error');err.classList.add('show')}}
+}
+function validatePhone(el){
+  const err=document.getElementById('phone-err');const ok=el.value.replace(/\D/g,'').length>=10;
+  if(ok){el.classList.add('valid');el.classList.remove('error');err.classList.remove('show')}
+  else{el.classList.remove('valid');if(el.value){el.classList.add('error');err.classList.add('show')}}
+}
+function clearForm(){
+  document.getElementById('reg-form').reset();
+  document.querySelectorAll('.valid,.error').forEach(el=>{el.classList.remove('valid','error')});
+  document.querySelectorAll('.field-error.show').forEach(el=>el.classList.remove('show'));
+  document.getElementById('photo-preview').textContent='👤';
+}
+function submitForm(e){
+  e.preventDefault();
+  const required=['fname','lname','dob','email','phone','address','city','qualification','course'];
+  let valid=true;
+  required.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&!el.value.trim()){el.classList.add('error');const err=document.getElementById(id+'-err');if(err)err.classList.add('show');valid=false;}
+  });
+  if(!valid){window.scrollTo({top:0,behavior:'smooth'});return;}
+  const num=Math.floor(1285+Math.random()*100);
+  document.getElementById('generated-id').textContent='NGT-2025-'+num;
+  document.getElementById('success-modal').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('success-modal').classList.remove('show');
+  clearForm();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function previewPhoto(input){
+  if(input.files&&input.files[0]){
+    const r=new FileReader();
+    r.onload=e=>{
+      const p=document.getElementById('photo-preview');
+      p.innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:12px">';
+    };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+</body>
+</html>
