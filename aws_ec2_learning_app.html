@@ -1,0 +1,527 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--orange:#E8834A;--orange-light:#FDF0E8;--orange-dark:#B85C28;--navy:#1A2540;--navy-mid:#253152;--navy-light:#2E3D6B;--slate:#4A5980;--text-main:var(--color-text-primary);--text-muted:var(--color-text-secondary);--surface:var(--color-background-primary);--surface2:var(--color-background-secondary)}
+  .app{font-family:'Sora',sans-serif;display:flex;height:600px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--surface)}
+  .sidebar{width:200px;background:var(--navy);flex-shrink:0;display:flex;flex-direction:column;padding:16px 0}
+  .logo{padding:0 16px 16px;border-bottom:0.5px solid rgba(255,255,255,0.1)}
+  .logo-text{font-size:13px;font-weight:600;color:var(--orange);letter-spacing:.5px}
+  .logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px}
+  .nav{padding:12px 0;flex:1}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.55);font-weight:500;transition:all .2s;border-left:2px solid transparent}
+  .nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+  .nav-item.active{color:#fff;background:rgba(232,131,74,0.15);border-left:2px solid var(--orange)}
+  .nav-icon{width:16px;height:16px;font-size:14px;flex-shrink:0}
+  .progress-bar{margin:0 16px;padding-top:12px;border-top:0.5px solid rgba(255,255,255,0.1)}
+  .progress-label{font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px}
+  .progress-track{height:4px;background:rgba(255,255,255,0.1);border-radius:2px}
+  .progress-fill{height:4px;background:var(--orange);border-radius:2px;transition:width .4s}
+  .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+  .header{padding:20px 24px 16px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--surface)}
+  .section-label{font-size:10px;font-weight:600;color:var(--orange);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+  .header h2{font-size:18px;font-weight:600;color:var(--text-main)}
+  .header p{font-size:12px;color:var(--text-muted);margin-top:4px}
+  .content{padding:20px 24px;flex:1}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+  .concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+  .concept-card{background:var(--surface2);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px;cursor:pointer;transition:all .2s}
+  .concept-card:hover{border-color:var(--orange);background:var(--orange-light)}
+  .concept-card .cc-icon{font-size:20px;margin-bottom:6px}
+  .concept-card h4{font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:4px}
+  .concept-card p{font-size:11px;color:var(--text-muted);line-height:1.5}
+  .info-box{background:var(--orange-light);border:0.5px solid var(--orange);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+  .info-box .ib-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+  .info-box p{font-size:12px;color:var(--navy);line-height:1.6}
+  .info-box strong{color:var(--orange-dark)}
+  .diagram{background:var(--surface2);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:16px;margin-bottom:16px}
+  .diagram-title{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .arch-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .arch-box{background:var(--surface);border:1.5px solid var(--color-border-tertiary);border-radius:6px;padding:8px 12px;font-size:11px;font-weight:500;color:var(--text-main);text-align:center;flex:1;min-width:80px}
+  .arch-box.highlight{border-color:var(--orange);background:var(--orange-light);color:var(--orange-dark)}
+  .arch-arrow{color:var(--text-muted);font-size:14px;flex-shrink:0}
+  .instance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+  .instance-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;cursor:pointer;transition:all .2s;background:var(--surface)}
+  .instance-card:hover,.instance-card.selected{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange)}
+  .instance-type{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--orange);margin-bottom:4px}
+  .instance-name{font-size:11px;font-weight:600;color:var(--text-main);margin-bottom:6px}
+  .instance-spec{font-size:10px;color:var(--text-muted);line-height:1.6}
+  .use-case-badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:3px;margin-top:6px;letter-spacing:.3px}
+  .badge-compute{background:#E6F1FB;color:#0C447C}
+  .badge-memory{background:#EAF3DE;color:#27500A}
+  .badge-storage{background:#FAEEDA;color:#633806}
+  .badge-gpu{background:#EEEDFE;color:#3C3489}
+  .badge-general{background:#E1F5EE;color:#085041}
+  .steps-list{list-style:none}
+  .step-item{display:flex;gap:12px;margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+  .step-num{width:24px;height:24px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-body h4{font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:3px}
+  .step-body p{font-size:11px;color:var(--text-muted);line-height:1.5}
+  .step-body code{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);padding:1px 5px;border-radius:3px;color:var(--orange-dark)}
+  .quiz-q{margin-bottom:16px}
+  .quiz-q p{font-size:13px;font-weight:500;color:var(--text-main);margin-bottom:10px}
+  .quiz-option{display:block;width:100%;text-align:left;padding:10px 14px;margin-bottom:6px;background:var(--surface2);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:12px;color:var(--text-main);cursor:pointer;transition:all .2s;font-family:'Sora',sans-serif}
+  .quiz-option:hover{border-color:var(--orange);background:var(--orange-light);color:var(--navy)}
+  .quiz-option.correct{background:#EAF3DE;border-color:#639922;color:#27500A}
+  .quiz-option.wrong{background:#FCEBEB;border-color:#E24B4A;color:#501313}
+  .quiz-option:disabled{cursor:default}
+  .quiz-feedback{font-size:11px;margin-top:4px;padding:6px 10px;border-radius:4px}
+  .quiz-feedback.correct{background:#EAF3DE;color:#27500A}
+  .quiz-feedback.wrong{background:#FCEBEB;color:#501313}
+  .score-display{text-align:center;padding:20px;background:var(--surface2);border-radius:var(--border-radius-md);margin-top:12px}
+  .score-num{font-size:36px;font-weight:600;color:var(--orange)}
+  .score-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+  .btn{padding:8px 16px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--surface);color:var(--text-main);font-size:12px;font-weight:500;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s}
+  .btn:hover{background:var(--surface2)}
+  .btn-primary{background:var(--orange);border-color:var(--orange);color:#fff}
+  .btn-primary:hover{background:var(--orange-dark);border-color:var(--orange-dark)}
+  .pricing-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+  .pricing-table th{text-align:left;padding:8px 10px;background:var(--surface2);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:.5px;border-bottom:1px solid var(--color-border-tertiary)}
+  .pricing-table td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--text-main);vertical-align:middle}
+  .pricing-table tr:last-child td{border-bottom:none}
+  .pill{font-size:9px;font-weight:600;padding:2px 7px;border-radius:3px;display:inline-block}
+  .pill-green{background:#EAF3DE;color:#27500A}
+  .pill-amber{background:#FAEEDA;color:#633806}
+  .pill-red{background:#FCEBEB;color:#501313}
+  .section-divider{height:0.5px;background:var(--color-border-tertiary);margin:16px 0}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--surface2);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:8px 12px;color:var(--text-main);line-height:1.7;margin-bottom:10px}
+  .tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;background:var(--surface2);border:0.5px solid var(--color-border-tertiary);color:var(--text-muted);margin:2px 2px 0 0}
+</style>
+
+<h2 class="sr-only">AWS EC2 interactive learning application covering core concepts, instance types, launch steps, pricing, and quiz</h2>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-text">AWS EC2</div>
+      <div class="logo-sub">Interactive Learning</div>
+    </div>
+    <div class="nav" id="nav">
+      <div class="nav-item active" data-tab="overview">
+        <span class="nav-icon">☁️</span> Overview
+      </div>
+      <div class="nav-item" data-tab="instances">
+        <span class="nav-icon">⚡</span> Instance types
+      </div>
+      <div class="nav-item" data-tab="launch">
+        <span class="nav-icon">🚀</span> Launching
+      </div>
+      <div class="nav-item" data-tab="concepts">
+        <span class="nav-icon">📖</span> Key concepts
+      </div>
+      <div class="nav-item" data-tab="pricing">
+        <span class="nav-icon">💰</span> Pricing models
+      </div>
+      <div class="nav-item" data-tab="quiz">
+        <span class="nav-icon">🎯</span> Quiz
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-label">Progress</div>
+      <div class="progress-track"><div class="progress-fill" id="progress" style="width:16%"></div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header" id="header">
+      <div class="section-label" id="section-label">Module 1</div>
+      <h2 id="section-title">What is Amazon EC2?</h2>
+      <p id="section-desc">Elastic Compute Cloud — scalable virtual servers in the cloud</p>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="tab-content active" id="tab-overview">
+        <div class="info-box">
+          <span class="ib-icon">💡</span>
+          <p><strong>Amazon EC2</strong> (Elastic Compute Cloud) provides resizable compute capacity in the cloud. Think of it as renting a virtual computer from AWS — you choose the CPU, RAM, storage, and OS you need, pay for what you use, and can scale instantly.</p>
+        </div>
+        <div class="diagram">
+          <div class="diagram-title">EC2 in the AWS ecosystem</div>
+          <div class="arch-row">
+            <div class="arch-box">Your app</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box highlight">EC2 instance</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box">S3 / RDS / VPC</div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--text-muted)">EC2 is the compute layer. It connects to storage (S3, EBS), databases (RDS), and networking (VPC).</div>
+        </div>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="cc-icon">🔧</div>
+            <h4>Elastic compute</h4>
+            <p>Scale up or down instantly based on your workload demands</p>
+          </div>
+          <div class="concept-card">
+            <div class="cc-icon">🌍</div>
+            <h4>Global regions</h4>
+            <p>Deploy in 30+ regions and 90+ availability zones worldwide</p>
+          </div>
+          <div class="concept-card">
+            <div class="cc-icon">🔒</div>
+            <h4>Secure by default</h4>
+            <p>VPC isolation, security groups, IAM roles, and key pair auth</p>
+          </div>
+          <div class="concept-card">
+            <div class="cc-icon">💳</div>
+            <h4>Pay-as-you-go</h4>
+            <p>Pay only for the compute time you actually use, by the second</p>
+          </div>
+        </div>
+        <div class="info-box" style="background:var(--color-background-secondary);border-color:var(--color-border-tertiary)">
+          <span class="ib-icon">🎓</span>
+          <p style="color:var(--text-muted)">Use the sidebar to explore instance types, learn how to launch an instance step-by-step, understand pricing models, and test your knowledge with a quiz!</p>
+        </div>
+      </div>
+
+      <!-- INSTANCE TYPES -->
+      <div class="tab-content" id="tab-instances">
+        <div class="info-box">
+          <span class="ib-icon">⚡</span>
+          <p>Instance types define the hardware of the host computer. The naming pattern is <strong>family + generation + size</strong> — e.g. <strong>t3.micro</strong> = T family, gen 3, micro size.</p>
+        </div>
+        <div class="instance-grid" id="instance-grid">
+          <div class="instance-card" onclick="selectInstance(this,'t3','General purpose','2 vCPU / 1 GB RAM','Burstable performance, cost-effective for web apps and dev environments','general')">
+            <div class="instance-type">t3.micro</div>
+            <div class="instance-name">General purpose</div>
+            <div class="instance-spec">2 vCPU · 1 GB RAM</div>
+            <div><span class="use-case-badge badge-general">General</span></div>
+          </div>
+          <div class="instance-card" onclick="selectInstance(this,'c6g','Compute optimised','4 vCPU / 8 GB RAM','High performance processors for batch processing, media transcoding, gaming','compute')">
+            <div class="instance-type">c6g.xlarge</div>
+            <div class="instance-name">Compute optimised</div>
+            <div class="instance-spec">4 vCPU · 8 GB RAM</div>
+            <div><span class="use-case-badge badge-compute">Compute</span></div>
+          </div>
+          <div class="instance-card" onclick="selectInstance(this,'r6i','Memory optimised','8 vCPU / 64 GB RAM','High memory for in-memory databases like Redis, real-time analytics','memory')">
+            <div class="instance-type">r6i.2xlarge</div>
+            <div class="instance-name">Memory optimised</div>
+            <div class="instance-spec">8 vCPU · 64 GB RAM</div>
+            <div><span class="use-case-badge badge-memory">Memory</span></div>
+          </div>
+          <div class="instance-card" onclick="selectInstance(this,'i3','Storage optimised','4 vCPU / 30.5 GB RAM + NVMe','High I/O for NoSQL databases, data warehousing, distributed file systems','storage')">
+            <div class="instance-type">i3.xlarge</div>
+            <div class="instance-name">Storage optimised</div>
+            <div class="instance-spec">4 vCPU · 30.5 GB RAM</div>
+            <div><span class="use-case-badge badge-storage">Storage</span></div>
+          </div>
+          <div class="instance-card" onclick="selectInstance(this,'p4d','Accelerated compute','96 vCPU / 1152 GB RAM + 8× A100 GPU','Deep learning training, ML inference, scientific simulation','gpu')">
+            <div class="instance-type">p4d.24xlarge</div>
+            <div class="instance-name">Accelerated (GPU)</div>
+            <div class="instance-spec">96 vCPU · 8× GPU</div>
+            <div><span class="use-case-badge badge-gpu">GPU / ML</span></div>
+          </div>
+          <div class="instance-card" onclick="selectInstance(this,'m6i','Balanced workloads','4 vCPU / 16 GB RAM','Application servers, enterprise apps, gaming, caching fleets','general')">
+            <div class="instance-type">m6i.xlarge</div>
+            <div class="instance-name">Balanced workloads</div>
+            <div class="instance-spec">4 vCPU · 16 GB RAM</div>
+            <div><span class="use-case-badge badge-general">General</span></div>
+          </div>
+        </div>
+        <div id="instance-detail" style="display:none;background:var(--orange-light);border:0.5px solid var(--orange);border-radius:var(--border-radius-md);padding:14px">
+          <div style="font-size:10px;font-weight:600;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Selected instance</div>
+          <div id="inst-family" style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:var(--orange-dark)"></div>
+          <div id="inst-name" style="font-size:12px;font-weight:600;color:var(--navy);margin:3px 0"></div>
+          <div id="inst-spec" style="font-size:11px;color:var(--orange-dark);margin-bottom:6px"></div>
+          <div id="inst-usecase" style="font-size:11px;color:var(--navy);line-height:1.5"></div>
+        </div>
+      </div>
+
+      <!-- LAUNCH -->
+      <div class="tab-content" id="tab-launch">
+        <div class="info-box">
+          <span class="ib-icon">🚀</span>
+          <p>Launching an EC2 instance takes just a few minutes through the AWS Console or CLI. Follow these steps to get your virtual server running.</p>
+        </div>
+        <ul class="steps-list">
+          <li class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Choose an AMI (Amazon Machine Image)</h4>
+              <p>An AMI is a template containing the OS and pre-installed software. Select from <code>Amazon Linux 2</code>, <code>Ubuntu 22.04</code>, <code>Windows Server</code>, or custom AMIs from the marketplace.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Select an instance type</h4>
+              <p>Choose your compute size based on CPU, RAM, and network needs. Start with <code>t3.micro</code> for testing — it's free tier eligible.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Configure network & subnet</h4>
+              <p>Place your instance inside a <code>VPC</code> and choose a subnet. Use a public subnet for internet access or a private subnet for internal workloads.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Attach a security group</h4>
+              <p>Security groups act as virtual firewalls. Open port <code>22</code> for SSH (Linux) or <code>3389</code> for RDP (Windows). Restrict SSH to your IP only!</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>Create or select a key pair</h4>
+              <p>A key pair authenticates your SSH connection. Download the <code>.pem</code> file and keep it safe — AWS won't let you download it again.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">6</div>
+            <div class="step-body">
+              <h4>Launch and connect</h4>
+              <p>Click Launch. Once running, connect via: <code>ssh -i key.pem ec2-user@&lt;public-ip&gt;</code></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CONCEPTS -->
+      <div class="tab-content" id="tab-concepts">
+        <div class="concept-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+          <div class="concept-card" onclick="showConcept('ami')">
+            <div class="cc-icon">💿</div>
+            <h4>AMI — Amazon Machine Image</h4>
+            <p>Pre-configured snapshot used to launch instances. Contains OS, libraries, and app configs.</p>
+          </div>
+          <div class="concept-card" onclick="showConcept('sg')">
+            <div class="cc-icon">🛡️</div>
+            <h4>Security groups</h4>
+            <p>Stateful virtual firewalls controlling inbound and outbound traffic at the instance level.</p>
+          </div>
+          <div class="concept-card" onclick="showConcept('ebs')">
+            <div class="cc-icon">💾</div>
+            <h4>EBS — Elastic Block Store</h4>
+            <p>Persistent block storage volumes that attach to EC2 like a hard drive. Survives instance stop.</p>
+          </div>
+          <div class="concept-card" onclick="showConcept('eip')">
+            <div class="cc-icon">🌐</div>
+            <h4>Elastic IP</h4>
+            <p>A static public IPv4 address you can reassign between instances for fault-tolerant architectures.</p>
+          </div>
+          <div class="concept-card" onclick="showConcept('az')">
+            <div class="cc-icon">🏗️</div>
+            <h4>Availability zones</h4>
+            <p>Isolated data centers within a region. Deploy across multiple AZs for high availability.</p>
+          </div>
+          <div class="concept-card" onclick="showConcept('iam')">
+            <div class="cc-icon">🔑</div>
+            <h4>IAM roles</h4>
+            <p>Grant EC2 instances permission to access other AWS services without embedding credentials.</p>
+          </div>
+        </div>
+        <div id="concept-detail" style="display:none;background:var(--surface2);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px"></div>
+      </div>
+
+      <!-- PRICING -->
+      <div class="tab-content" id="tab-pricing">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>How it works</th>
+              <th>Savings</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>On-demand</strong></td>
+              <td>Pay by the second, no commitment</td>
+              <td><span class="pill pill-red">Baseline</span></td>
+              <td>Dev/test, unpredictable workloads</td>
+            </tr>
+            <tr>
+              <td><strong>Spot</strong></td>
+              <td>Bid for unused AWS capacity; can be interrupted</td>
+              <td><span class="pill pill-green">Up to 90%</span></td>
+              <td>Batch jobs, fault-tolerant apps</td>
+            </tr>
+            <tr>
+              <td><strong>Reserved (1yr)</strong></td>
+              <td>Commit to 1 year, pay upfront or monthly</td>
+              <td><span class="pill pill-green">Up to 40%</span></td>
+              <td>Steady-state production workloads</td>
+            </tr>
+            <tr>
+              <td><strong>Reserved (3yr)</strong></td>
+              <td>Commit to 3 years, all-upfront payment</td>
+              <td><span class="pill pill-green">Up to 60%</span></td>
+              <td>Long-running databases, always-on apps</td>
+            </tr>
+            <tr>
+              <td><strong>Savings plans</strong></td>
+              <td>Commit to $/hr spend, flexible instance types</td>
+              <td><span class="pill pill-amber">Up to 66%</span></td>
+              <td>Flexible but predictable usage patterns</td>
+            </tr>
+            <tr>
+              <td><strong>Dedicated host</strong></td>
+              <td>Physical server reserved for your use</td>
+              <td><span class="pill pill-red">Premium</span></td>
+              <td>Compliance, BYOL licensing requirements</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mono">
+# Example: t3.micro in us-east-1 (N. Virginia)
+On-demand:   $0.0104 / hour  →  ~$7.50 / month
+Reserved 1yr: $0.0062 / hour  →  ~$4.50 / month  (40% savings)
+Spot:         $0.0031 / hour  →  ~$2.25 / month  (70% savings)
+Free tier:    750 hours/month FREE for first 12 months ✓
+        </div>
+        <div class="info-box">
+          <span class="ib-icon">💡</span>
+          <p><strong>Pro tip:</strong> Use <strong>Spot instances</strong> for CI/CD pipelines and batch data processing. Use <strong>Reserved instances</strong> for production databases. Mix both for maximum savings!</p>
+        </div>
+      </div>
+
+      <!-- QUIZ -->
+      <div class="tab-content" id="tab-quiz">
+        <div id="quiz-container"></div>
+        <div id="quiz-result" style="display:none">
+          <div class="score-display">
+            <div class="score-num" id="final-score">0/5</div>
+            <div class="score-label" id="final-label">Calculating...</div>
+          </div>
+          <div style="text-align:center;margin-top:12px">
+            <button class="btn btn-primary" onclick="resetQuiz()">Retake quiz</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const tabs=[
+  {id:'overview',label:'Module 1',title:'What is Amazon EC2?',desc:'Elastic Compute Cloud — scalable virtual servers in the cloud'},
+  {id:'instances',label:'Module 2',title:'EC2 instance types',desc:'Choose the right hardware for your workload'},
+  {id:'launch',label:'Module 3',title:'Launching an instance',desc:'Step-by-step guide to getting your first server running'},
+  {id:'concepts',label:'Module 4',title:'Key EC2 concepts',desc:'Core building blocks you need to understand'},
+  {id:'pricing',label:'Module 5',title:'Pricing models',desc:'On-demand, Spot, Reserved — choose wisely'},
+  {id:'quiz',label:'Assessment',title:'Test your knowledge',desc:'5 questions to check what you\'ve learned'}
+];
+const visited=new Set(['overview']);
+
+function updateProgress(){
+  const pct=Math.round((visited.size/tabs.length)*100);
+  document.getElementById('progress').style.width=pct+'%';
+}
+
+document.getElementById('nav').addEventListener('click',function(e){
+  const item=e.target.closest('.nav-item');
+  if(!item)return;
+  const tabId=item.dataset.tab;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  item.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tabId).classList.add('active');
+  const meta=tabs.find(t=>t.id===tabId);
+  document.getElementById('section-label').textContent=meta.label;
+  document.getElementById('section-title').textContent=meta.title;
+  document.getElementById('section-desc').textContent=meta.desc;
+  visited.add(tabId);
+  updateProgress();
+});
+
+function selectInstance(el,family,name,spec,usecase,type){
+  document.querySelectorAll('.instance-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('inst-family').textContent=family;
+  document.getElementById('inst-name').textContent=name;
+  document.getElementById('inst-spec').textContent=spec;
+  document.getElementById('inst-usecase').textContent=usecase;
+  document.getElementById('instance-detail').style.display='block';
+}
+
+const conceptData={
+  ami:{icon:'💿',title:'AMI — Amazon Machine Image',body:'An AMI is a read-only template used to launch EC2 instances. It includes the OS (e.g. Ubuntu, Amazon Linux), installed software, configurations, and sometimes application code. You can use AWS-provided AMIs, community AMIs, or create your own custom AMI from a running instance as a "golden image" for consistent deployments. AMIs are region-specific but can be copied across regions.'},
+  sg:{icon:'🛡️',title:'Security groups',body:'Security groups are stateful virtual firewalls applied at the instance level. "Stateful" means if you allow inbound traffic, the return traffic is automatically allowed. Rules are allow-only — there are no deny rules. Common setup: allow inbound TCP/22 (SSH) from your IP, TCP/80 and TCP/443 from anywhere (0.0.0.0/0) for web servers. Multiple instances can share a security group.'},
+  ebs:{icon:'💾',title:'EBS — Elastic Block Store',body:'EBS provides persistent block storage for EC2. Unlike instance store (ephemeral, lost on stop), EBS volumes persist independently of the instance lifecycle. Types: gp3 (general purpose SSD, default), io2 (high IOPS for databases), st1 (throughput HDD for big data), sc1 (cold HDD for archives). EBS volumes are replicated within an AZ for durability. Snapshots can be taken to S3 for backup.'},
+  eip:{icon:'🌐',title:'Elastic IP addresses',body:'When you stop and start an EC2 instance, the public IP changes. Elastic IP is a static public IPv4 address that you own. You can associate it with any instance in your account and reassign it quickly during failover. Important: You are charged for Elastic IPs that are NOT associated with a running instance — always release unused EIPs to avoid surprise charges.'},
+  az:{icon:'🏗️',title:'Regions and availability zones',body:'AWS is organized into Regions (e.g. us-east-1, ap-south-1) and each Region has 2–6 Availability Zones (AZs). Each AZ is one or more discrete data centers with independent power and networking. Best practice: deploy instances in at least 2 AZs behind a load balancer. If one AZ fails, the other handles traffic. This is the foundation of high availability architecture on AWS.'},
+  iam:{icon:'🔑',title:'IAM roles for EC2',body:'Instead of storing AWS credentials (access key + secret) on your EC2 instance (a major security risk!), attach an IAM Role. The role grants specific permissions — for example, s3:GetObject to read from S3. The instance automatically gets temporary rotating credentials via the Instance Metadata Service (IMDS). Applications use SDKs that automatically retrieve these credentials without any configuration.'}
+};
+
+function showConcept(key){
+  const c=conceptData[key];
+  const div=document.getElementById('concept-detail');
+  div.style.display='block';
+  div.innerHTML='<div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">'+c.icon+'</span><div><div style="font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:6px">'+c.title+'</div><div style="font-size:12px;color:var(--text-muted);line-height:1.7">'+c.body+'</div></div></div>';
+}
+
+const questions=[
+  {q:'What does "EC2" stand for?',opts:['Elastic Cloud Compute','Elastic Compute Cloud','Enterprise Cloud Container','Elastic Container Cluster'],ans:1,exp:'EC2 = Elastic Compute Cloud. The name reflects its core value: elastic (scalable), compute (processing power), cloud (hosted on AWS).'},
+  {q:'Which instance type is best for a memory-intensive in-memory database like Redis?',opts:['t3.micro (general purpose)','c6g.xlarge (compute optimised)','r6i.2xlarge (memory optimised)','i3.xlarge (storage optimised)'],ans:2,exp:'The "r" family (r6i, r5, etc.) is memory-optimised — designed for workloads that process large datasets in RAM.'},
+  {q:'You stop and restart your EC2 instance. What happens to its public IP?',opts:['It stays the same','It changes to a new IP','It becomes null until you assign one','AWS emails you the new IP'],ans:1,exp:'Public IPs are released when an instance stops. Use an Elastic IP if you need a persistent static IP address.'},
+  {q:'Which pricing model offers up to 90% discount but can be interrupted by AWS?',opts:['On-demand','Reserved (1yr)','Savings Plans','Spot'],ans:3,exp:'Spot instances use spare AWS capacity at a deep discount but can be terminated with 2 minutes notice when AWS needs capacity back.'},
+  {q:'What is the purpose of a Security Group in EC2?',opts:['Encrypts data at rest on EBS volumes','Controls inbound/outbound traffic at the instance level','Manages IAM user permissions','Provides DNS resolution for instances'],ans:1,exp:'Security Groups are stateful virtual firewalls. They filter traffic based on rules you define (port, protocol, source/destination IP).'}
+];
+
+let qState={cur:0,score:0,answered:[]};
+
+function renderQuiz(){
+  if(qState.cur>=questions.length){
+    document.getElementById('quiz-container').style.display='none';
+    const r=document.getElementById('quiz-result');
+    r.style.display='block';
+    document.getElementById('final-score').textContent=qState.score+'/'+questions.length;
+    const msgs=['Keep studying — review the modules and try again!','Good effort! A bit more practice will get you there.','Nice work! You know your EC2 basics.','Great job! You have strong EC2 knowledge.','Perfect score! You are EC2 ready! 🎉'];
+    document.getElementById('final-label').textContent=msgs[qState.score];
+    return;
+  }
+  const q=questions[qState.cur];
+  let html='<div style="font-size:10px;font-weight:600;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Question '+(qState.cur+1)+' of '+questions.length+'</div>';
+  html+='<div class="quiz-q"><p>'+q.q+'</p>';
+  q.opts.forEach((o,i)=>{
+    html+='<button class="quiz-option" id="opt-'+i+'" onclick="answerQ('+i+')">'+o+'</button>';
+  });
+  html+='<div id="qfeedback" style="display:none" class="quiz-feedback"></div></div>';
+  if(qState.cur>0){
+    html+='<button class="btn" id="next-btn" style="display:none;margin-top:8px" onclick="nextQ()">Next question →</button>';
+  }
+  document.getElementById('quiz-container').innerHTML=html;
+}
+
+function answerQ(i){
+  const q=questions[qState.cur];
+  const opts=document.querySelectorAll('.quiz-option');
+  opts.forEach(o=>o.disabled=true);
+  opts[q.ans].classList.add('correct');
+  const fb=document.getElementById('qfeedback');
+  fb.style.display='block';
+  if(i===q.ans){
+    qState.score++;
+    fb.className='quiz-feedback correct';
+    fb.textContent='Correct! '+q.exp;
+  } else {
+    opts[i].classList.add('wrong');
+    fb.className='quiz-feedback wrong';
+    fb.textContent='Not quite. '+q.exp;
+  }
+  const nb=document.getElementById('next-btn');
+  if(nb)nb.style.display='inline-block';
+  if(!document.getElementById('next-btn')){
+    const btn=document.createElement('button');
+    btn.className='btn';
+    btn.style.marginTop='8px';
+    btn.textContent=qState.cur<questions.length-1?'Next question →':'See my score';
+    btn.onclick=nextQ;
+    document.getElementById('quiz-container').appendChild(btn);
+  }
+}
+
+function nextQ(){qState.cur++;renderQuiz();}
+function resetQuiz(){qState={cur:0,score:0,answered:[]};document.getElementById('quiz-result').style.display='none';document.getElementById('quiz-container').style.display='block';renderQuiz();}
+
+renderQuiz();
+updateProgress();
+</script>
