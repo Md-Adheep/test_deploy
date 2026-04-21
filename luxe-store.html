@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUXE — Premium Fashion Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0D0D0D;
+  --cream:#F7F3EE;
+  --gold:#C8A96E;
+  --gold-light:#E8D5AA;
+  --warm:#F0E6D3;
+  --muted:#8A8070;
+  --border:#E2D9CC;
+  --white:#FFFFFF;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s,width .3s,height .3s;mix-blend-mode:multiply}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .08s,width .3s,height .3s,opacity .3s;opacity:.6}
+body:hover .cursor{opacity:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(247,243,238,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;letter-spacing:8px;color:var(--ink);text-decoration:none}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--ink);text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-links a:hover{color:var(--gold)}
+.nav-right{display:flex;gap:20px;align-items:center}
+.nav-icon{font-size:18px;cursor:pointer;position:relative;color:var(--ink);transition:color .2s}
+.nav-icon:hover{color:var(--gold)}
+.cart-count{position:absolute;top:-6px;right:-6px;background:var(--gold);color:var(--white);font-size:9px;font-weight:500;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.nav-search{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ink);outline:none;width:0;transition:width .4s,opacity .4s;opacity:0;cursor:text}
+.nav-search:focus{width:160px;opacity:1;border-bottom:1px solid var(--gold)}
+
+/* HERO */
+.hero{height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;margin-top:72px}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:80px 64px;position:relative;z-index:2}
+.hero-eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;animation:fadeUp .8s .2s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(60px,7vw,96px);font-weight:300;line-height:1.0;color:var(--ink);margin-bottom:32px;opacity:0;animation:fadeUp .8s .4s forwards}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-desc{font-size:15px;line-height:1.8;color:var(--muted);max-width:380px;margin-bottom:48px;opacity:0;animation:fadeUp .8s .6s forwards}
+.hero-cta{display:flex;gap:16px;opacity:0;animation:fadeUp .8s .8s forwards}
+.btn-primary{padding:16px 40px;background:var(--ink);color:var(--white);font-size:11px;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;transition:background .3s,transform .2s;font-family:'DM Sans',sans-serif}
+.btn-primary:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-outline{padding:16px 40px;background:transparent;color:var(--ink);font-size:11px;letter-spacing:3px;text-transform:uppercase;border:1px solid var(--ink);cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-right{position:relative;overflow:hidden}
+.hero-image{width:100%;height:100%;object-fit:cover}
+.hero-img-placeholder{width:100%;height:100%;background:linear-gradient(135deg,#C8A96E22,#0D0D0D11),
+  repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(200,169,110,.05) 40px,rgba(200,169,110,.05) 80px);
+  display:flex;align-items:center;justify-content:center;position:relative}
+.hero-img-inner{width:72%;height:80%;background:linear-gradient(160deg,#D4B896,#8B6E4E,#5C4230);border-radius:2px;position:relative;overflow:hidden;box-shadow:40px 40px 80px rgba(0,0,0,.2)}
+.hero-img-inner::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.15) 0%,transparent 50%,rgba(0,0,0,.3) 100%)}
+.hero-tag{position:absolute;bottom:-20px;left:-20px;background:var(--white);padding:20px 24px;border-left:3px solid var(--gold);box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.hero-tag-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.hero-tag-value{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink)}
+.hero-float{position:absolute;top:40px;right:40px;background:var(--gold);color:var(--white);padding:10px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;border-radius:0;animation:float 3s ease-in-out infinite}
+
+/* MARQUEE */
+.marquee-strip{background:var(--ink);color:var(--cream);padding:14px 0;overflow:hidden;white-space:nowrap}
+.marquee-inner{display:inline-flex;gap:60px;animation:marquee 25s linear infinite}
+.marquee-inner span{font-size:11px;letter-spacing:4px;text-transform:uppercase}
+.marquee-inner .dot{color:var(--gold)}
+
+/* CATEGORIES */
+.section{padding:100px 48px}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px}
+.section-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4vw,56px);font-weight:300;line-height:1.1}
+.section-link{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:4px;transition:color .3s,border-color .3s}
+.section-link:hover{color:var(--gold);border-color:var(--gold)}
+.cat-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:auto auto;gap:16px;height:540px}
+.cat-card{position:relative;overflow:hidden;cursor:pointer;group:true}
+.cat-card:first-child{grid-row:1/3}
+.cat-card:nth-child(4){grid-column:2/4}
+.cat-img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.cat-img-placeholder{width:100%;height:100%;transition:transform .8s ease}
+.c1{background:linear-gradient(160deg,#8B6E4E,#4A3526)}
+.c2{background:linear-gradient(160deg,#6B7B6E,#3A4A3D)}
+.c3{background:linear-gradient(160deg,#7B6B8E,#4A3A5A)}
+.c4{background:linear-gradient(160deg,#8E7B6B,#5A4A3A)}
+.cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 55%);transition:opacity .4s}
+.cat-card:hover .cat-img-placeholder,.cat-card:hover .cat-img{transform:scale(1.06)}
+.cat-card:hover .cat-overlay{opacity:.85}
+.cat-info{position:absolute;bottom:0;left:0;right:0;padding:28px}
+.cat-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:8px}
+.cat-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--white);margin-bottom:8px}
+.cat-count{font-size:11px;color:rgba(255,255,255,.55)}
+.cat-arrow{position:absolute;top:24px;right:24px;width:40px;height:40px;border:1px solid rgba(255,255,255,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);opacity:0;transform:translateY(10px);transition:all .4s}
+.cat-card:hover .cat-arrow{opacity:1;transform:translateY(0)}
+
+/* PRODUCTS */
+.products-section{padding:100px 48px;background:var(--white)}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.product-card{position:relative;cursor:pointer;overflow:hidden;background:var(--warm)}
+.product-img-wrap{position:relative;padding-bottom:125%;overflow:hidden}
+.product-img-bg{position:absolute;inset:0;transition:transform .7s ease}
+.p1{background:linear-gradient(160deg,#D4C4B0,#A08060)}
+.p2{background:linear-gradient(135deg,#B0C4D4,#607080)}
+.p3{background:linear-gradient(160deg,#D0B4B4,#905050)}
+.p4{background:linear-gradient(135deg,#C4D0B4,#708050)}
+.p5{background:linear-gradient(160deg,#D4D0B4,#908050)}
+.p6{background:linear-gradient(135deg,#C4B4D0,#705080)}
+.p7{background:linear-gradient(160deg,#B4D0C4,#507060)}
+.p8{background:linear-gradient(160deg,#D4B4C0,#905060)}
+.product-card:hover .product-img-bg{transform:scale(1.08)}
+.product-badge{position:absolute;top:16px;left:16px;background:var(--gold);color:var(--white);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;z-index:2}
+.product-actions{position:absolute;bottom:0;left:0;right:0;display:flex;gap:2px;transform:translateY(100%);transition:transform .4s ease;z-index:2}
+.product-card:hover .product-actions{transform:translateY(0)}
+.product-btn{flex:1;padding:12px 0;background:var(--ink);color:var(--white);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;transition:background .3s}
+.product-btn:hover{background:var(--gold)}
+.product-btn.wishlist{flex:0 0 48px;background:var(--white);color:var(--ink);font-size:16px}
+.product-btn.wishlist:hover{background:var(--cream);color:var(--gold)}
+.product-info{padding:20px 0 28px;background:var(--white)}
+.product-brand{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.product-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--ink);margin-bottom:10px;line-height:1.3}
+.product-price{display:flex;gap:12px;align-items:center}
+.price-now{font-size:15px;font-weight:500;color:var(--ink)}
+.price-old{font-size:13px;color:var(--muted);text-decoration:line-through}
+.price-save{font-size:10px;color:#8B4513;background:#F5E6D6;padding:2px 8px;border-radius:2px}
+.product-rating{display:flex;gap:3px;align-items:center;margin-top:8px}
+.stars{color:var(--gold);font-size:11px}
+.rating-count{font-size:11px;color:var(--muted)}
+
+/* BANNER */
+.banner{margin:0 48px;background:var(--ink);padding:80px 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;overflow:hidden}
+.banner::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border:1px solid rgba(200,169,110,.2);border-radius:50%}
+.banner::after{content:'';position:absolute;bottom:-120px;right:-40px;width:480px;height:480px;border:1px solid rgba(200,169,110,.1);border-radius:50%}
+.banner-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.banner-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,60px);font-weight:300;color:var(--white);line-height:1.1;margin-bottom:20px}
+.banner-title em{font-style:italic;color:var(--gold)}
+.banner-desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,.6);margin-bottom:36px}
+.banner-btn{display:inline-block;padding:16px 48px;background:var(--gold);color:var(--white);font-size:11px;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;text-decoration:none}
+.banner-btn:hover{background:var(--gold-light);color:var(--ink);transform:translateY(-2px)}
+.banner-right{position:relative;z-index:1}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.stat-item{padding:24px;border:1px solid rgba(255,255,255,.1)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--gold);line-height:1}
+.stat-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:8px}
+
+/* TESTIMONIALS */
+.testi-section{padding:100px 48px;background:var(--cream)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.testi-card{background:var(--white);padding:36px;border-bottom:3px solid var(--gold);position:relative}
+.testi-quote{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;font-style:italic;line-height:1.6;color:var(--ink);margin-bottom:28px}
+.testi-author{display:flex;align-items:center;gap:16px}
+.testi-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--white)}
+.av1{background:linear-gradient(135deg,#C8A96E,#8B6E4E)}
+.av2{background:linear-gradient(135deg,#7B8A6E,#4A5A3A)}
+.av3{background:linear-gradient(135deg,#8A7B9E,#5A4A6E)}
+.testi-name{font-size:13px;font-weight:500;color:var(--ink)}
+.testi-role{font-size:11px;color:var(--muted)}
+.testi-stars{position:absolute;top:36px;right:36px;color:var(--gold);font-size:12px;letter-spacing:2px}
+
+/* NEWSLETTER */
+.newsletter{background:var(--warm);padding:80px 48px;text-align:center;border-top:1px solid var(--border)}
+.newsletter-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.newsletter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,52px);font-weight:300;color:var(--ink);margin-bottom:12px}
+.newsletter-desc{font-size:14px;color:var(--muted);margin-bottom:40px}
+.newsletter-form{display:flex;gap:0;max-width:480px;margin:0 auto;border:1px solid var(--border)}
+.newsletter-input{flex:1;padding:16px 24px;background:var(--white);border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none}
+.newsletter-input::placeholder{color:var(--muted)}
+.newsletter-submit{padding:16px 32px;background:var(--ink);color:var(--white);border:none;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .3s;white-space:nowrap}
+.newsletter-submit:hover{background:var(--gold)}
+
+/* FOOTER */
+footer{background:var(--ink);color:var(--cream);padding:72px 48px 40px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.1)}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;letter-spacing:6px;margin-bottom:20px}
+.footer-tagline{font-size:13px;line-height:1.8;color:rgba(255,255,255,.55);margin-bottom:28px;max-width:280px}
+.footer-social{display:flex;gap:12px}
+.social-btn{width:36px;height:36px;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .3s;color:var(--cream);text-decoration:none}
+.social-btn:hover{background:var(--gold);border-color:var(--gold)}
+.footer-col h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:24px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:12px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.65);text-decoration:none;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.35)}
+.footer-pay{display:flex;gap:10px;font-size:10px;color:rgba(255,255,255,.35);letter-spacing:1px}
+.pay-tag{padding:4px 10px;border:1px solid rgba(255,255,255,.15);border-radius:2px}
+
+/* CART DRAWER */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .4s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:400px;background:var(--white);z-index:201;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-header{padding:28px 28px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cart-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300}
+.cart-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);transition:color .2s}
+.cart-close:hover{color:var(--gold)}
+.cart-items{flex:1;overflow-y:auto;padding:24px 28px}
+.cart-item{display:flex;gap:16px;padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.cart-item-img{width:80px;height:100px;flex-shrink:0;border-radius:2px}
+.cii1{background:linear-gradient(160deg,#D4C4B0,#A08060)}
+.cii2{background:linear-gradient(135deg,#B0C4D4,#607080)}
+.cii3{background:linear-gradient(160deg,#D0B4B4,#905050)}
+.cart-item-details{flex:1}
+.cart-item-brand{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.cart-item-name{font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:6px}
+.cart-item-meta{font-size:11px;color:var(--muted);margin-bottom:12px}
+.cart-item-row{display:flex;justify-content:space-between;align-items:center}
+.qty-control{display:flex;align-items:center;gap:8px;border:1px solid var(--border)}
+.qty-btn{width:28px;height:28px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.qty-btn:hover{background:var(--cream)}
+.qty-val{font-size:13px;font-weight:500;min-width:20px;text-align:center}
+.cart-item-price{font-size:15px;font-weight:500}
+.cart-footer{padding:20px 28px;border-top:1px solid var(--border)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cart-total-label{font-size:13px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.cart-total-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300}
+.checkout-btn{width:100%;padding:18px;background:var(--ink);color:var(--white);border:none;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .3s;margin-bottom:12px}
+.checkout-btn:hover{background:var(--gold)}
+.continue-btn{width:100%;padding:14px;background:transparent;color:var(--ink);border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.continue-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:var(--white);padding:14px 28px;font-size:12px;letter-spacing:1px;z-index:300;opacity:0;transition:all .4s;display:flex;align-items:center;gap:12px;border-left:3px solid var(--gold)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:8px;margin-bottom:40px;flex-wrap:wrap}
+.filter-chip{padding:8px 20px;border:1px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .3s;color:var(--muted)}
+.filter-chip:hover,.filter-chip.active{background:var(--ink);color:var(--white);border-color:var(--ink)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* WISHLIST HEART */
+.wished{color:#C0392B !important}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">LUXE</a>
+  <ul class="nav-links">
+    <li><a href="#">Women</a></li>
+    <li><a href="#">Men</a></li>
+    <li><a href="#">Accessories</a></li>
+    <li><a href="#">Collections</a></li>
+    <li><a href="#">Sale</a></li>
+  </ul>
+  <div class="nav-right">
+    <input class="nav-search" type="text" placeholder="Search...">
+    <span class="nav-icon" onclick="document.querySelector('.nav-search').focus()">🔍</span>
+    <span class="nav-icon" style="position:relative" onclick="toggleCart()">🛍️<span class="cart-count" id="cart-count">0</span></span>
+    <span class="nav-icon">👤</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">New Collection 2025</div>
+    <h1 class="hero-title">Wear the<br><em>Extraordinary</em></h1>
+    <p class="hero-desc">Curated fashion for those who appreciate the art of dressing. Premium pieces, timeless design, delivered to your door.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="scrollTo('.products-section')">Shop Now</button>
+      <button class="btn-outline">View Lookbook</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-placeholder">
+      <div class="hero-img-inner"></div>
+      <div class="hero-tag">
+        <div class="hero-tag-label">Limited Edition</div>
+        <div class="hero-tag-value">SS '25 Drop</div>
+      </div>
+      <div class="hero-float">✦ New Arrivals</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Free shipping on orders over $150</span><span class="dot">✦</span>
+    <span>New arrivals every friday</span><span class="dot">✦</span>
+    <span>Sustainable fashion forward</span><span class="dot">✦</span>
+    <span>30-day easy returns</span><span class="dot">✦</span>
+    <span>Members earn double points</span><span class="dot">✦</span>
+    <span>Free shipping on orders over $150</span><span class="dot">✦</span>
+    <span>New arrivals every friday</span><span class="dot">✦</span>
+    <span>Sustainable fashion forward</span><span class="dot">✦</span>
+    <span>30-day easy returns</span><span class="dot">✦</span>
+    <span>Members earn double points</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section reveal">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Shop by category</div>
+      <h2 class="section-title">Browse Our<br>Collections</h2>
+    </div>
+    <a href="#" class="section-link">View All</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-img-placeholder c1" style="height:100%"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info">
+        <div class="cat-label">Explore</div>
+        <div class="cat-name">Women's Fashion</div>
+        <div class="cat-count">248 Products</div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img-placeholder c2" style="height:100%"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info">
+        <div class="cat-label">Explore</div>
+        <div class="cat-name">Men's Wear</div>
+        <div class="cat-count">186 Products</div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img-placeholder c3" style="height:100%"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info">
+        <div class="cat-label">Explore</div>
+        <div class="cat-name">Accessories</div>
+        <div class="cat-count">124 Products</div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-img-placeholder c4" style="height:100%"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-info">
+        <div class="cat-label">Explore</div>
+        <div class="cat-name">Footwear</div>
+        <div class="cat-count">97 Products</div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section reveal">
+  <div style="padding:0 0 0 0">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Curated picks</div>
+        <h2 class="section-title">New Arrivals</h2>
+      </div>
+      <a href="#" class="section-link">View All Products</a>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="setFilter(this,'all')">All</button>
+      <button class="filter-chip" onclick="setFilter(this,'women')">Women</button>
+      <button class="filter-chip" onclick="setFilter(this,'men')">Men</button>
+      <button class="filter-chip" onclick="setFilter(this,'accessories')">Accessories</button>
+      <button class="filter-chip" onclick="setFilter(this,'sale')">On Sale</button>
+    </div>
+    <div class="product-grid" id="product-grid">
+
+      <div class="product-card" data-cat="women">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p1"></div>
+          <div class="product-badge">New</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Silk Wrap Dress','$289')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Maison Luxe</div>
+          <div class="product-name">Silk Wrap Dress</div>
+          <div class="product-price"><span class="price-now">$289</span></div>
+          <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">&nbsp;(48)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="men">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p2"></div>
+          <div class="product-badge" style="background:var(--ink)">Sale</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Tailored Blazer','$195')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Atelier Co.</div>
+          <div class="product-name">Tailored Blazer</div>
+          <div class="product-price"><span class="price-now">$195</span><span class="price-old">$280</span><span class="price-save">30% off</span></div>
+          <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">&nbsp;(32)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="accessories">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p3"></div>
+          <div class="product-badge">Bestseller</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Leather Tote Bag','$420')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Vellum Studio</div>
+          <div class="product-name">Leather Tote Bag</div>
+          <div class="product-price"><span class="price-now">$420</span></div>
+          <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">&nbsp;(91)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="women">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p4"></div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Linen Co-ord Set','$175')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Verde Label</div>
+          <div class="product-name">Linen Co-ord Set</div>
+          <div class="product-price"><span class="price-now">$175</span></div>
+          <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">&nbsp;(27)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="men">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p5"></div>
+          <div class="product-badge" style="background:var(--ink)">Sale</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Merino Wool Sweater','$149')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Nordic Thread</div>
+          <div class="product-name">Merino Wool Sweater</div>
+          <div class="product-price"><span class="price-now">$149</span><span class="price-old">$210</span><span class="price-save">29% off</span></div>
+          <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">&nbsp;(64)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="accessories">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p6"></div>
+          <div class="product-badge">New</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Gold Chain Necklace','$98')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Aura Fine</div>
+          <div class="product-name">Gold Chain Necklace</div>
+          <div class="product-price"><span class="price-now">$98</span></div>
+          <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">&nbsp;(112)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="women">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p7"></div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Cashmere Cardigan','$245')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Luxe Knit</div>
+          <div class="product-name">Cashmere Cardigan</div>
+          <div class="product-price"><span class="price-now">$245</span></div>
+          <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">&nbsp;(39)</span></div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="men">
+        <div class="product-img-wrap">
+          <div class="product-img-bg p8"></div>
+          <div class="product-badge">Limited</div>
+          <div class="product-actions">
+            <button class="product-btn" onclick="addToCart('Leather Oxford Shoes','$320')">Add to cart</button>
+            <button class="product-btn wishlist" onclick="toggleWish(this)">♡</button>
+          </div>
+        </div>
+        <div class="product-info" style="padding:20px 16px 28px">
+          <div class="product-brand">Cordwainer</div>
+          <div class="product-name">Leather Oxford Shoes</div>
+          <div class="product-price"><span class="price-now">$320</span></div>
+          <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">&nbsp;(58)</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BANNER -->
+<div class="banner reveal">
+  <div>
+    <div class="banner-eyebrow">✦ Members Club</div>
+    <h2 class="banner-title">Join the<br><em>Inner Circle</em></h2>
+    <p class="banner-desc">Get exclusive early access to new drops, member-only pricing, and styling consultations with our fashion experts. Join 50,000+ members who shop smarter.</p>
+    <a href="#" class="banner-btn">Become a Member</a>
+  </div>
+  <div class="banner-right">
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">50K+</div>
+        <div class="stat-label">Happy members</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">30%</div>
+        <div class="stat-label">Member savings</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Premium brands</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Average rating</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section reveal">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Social proof</div>
+      <h2 class="section-title">What Our<br>Customers Say</h2>
+    </div>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Absolutely breathtaking quality. The silk dress arrived perfectly packaged and fit like a dream. LUXE has become my go-to for every special occasion."</div>
+      <div class="testi-author">
+        <div class="testi-avatar av1">SA</div>
+        <div>
+          <div class="testi-name">Sophia Anderson</div>
+          <div class="testi-role">Verified Buyer · New York</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"The curation is impeccable. I found pieces I couldn't find anywhere else. The styling consultation was the cherry on top — genuinely transformative."</div>
+      <div class="testi-author">
+        <div class="testi-avatar av2">JM</div>
+        <div>
+          <div class="testi-name">James Mercer</div>
+          <div class="testi-role">Verified Buyer · London</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Fast shipping, stunning packaging, and the leather tote is even more gorgeous in person. I've recommended LUXE to everyone I know. Truly exceptional."</div>
+      <div class="testi-author">
+        <div class="testi-avatar av3">PL</div>
+        <div>
+          <div class="testi-name">Priya Lal</div>
+          <div class="testi-role">Verified Buyer · Mumbai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter reveal">
+  <div class="newsletter-eyebrow">Stay in the loop</div>
+  <h2 class="newsletter-title">The Edit, Every Week</h2>
+  <p class="newsletter-desc">Style inspiration, new arrivals, and exclusive offers — straight to your inbox.</p>
+  <div class="newsletter-form">
+    <input class="newsletter-input" type="email" placeholder="Your email address">
+    <button class="newsletter-submit" onclick="subscribeNewsletter()">Subscribe</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">LUXE</div>
+      <p class="footer-tagline">Premium fashion curated for those who appreciate the art of dressing well. Timeless pieces, sustainable choices.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">IG</a>
+        <a href="#" class="social-btn">FB</a>
+        <a href="#" class="social-btn">YT</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul class="footer-links">
+        <li><a href="#">Women</a></li>
+        <li><a href="#">Men</a></li>
+        <li><a href="#">Accessories</a></li>
+        <li><a href="#">Footwear</a></li>
+        <li><a href="#">Sale</a></li>
+        <li><a href="#">New Arrivals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul class="footer-links">
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Affiliates</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 LUXE Fashion. All rights reserved.</div>
+    <div class="footer-pay">
+      <span class="pay-tag">VISA</span>
+      <span class="pay-tag">MC</span>
+      <span class="pay-tag">AMEX</span>
+      <span class="pay-tag">PAYPAL</span>
+      <span class="pay-tag">GPay</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <div class="cart-title">Your Cart</div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items-list">
+    <div style="text-align:center;padding:60px 0;color:#8A8070">
+      <div style="font-size:36px;margin-bottom:16px">🛍️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;margin-bottom:8px">Your cart is empty</div>
+      <div style="font-size:12px">Add some beautiful pieces to get started</div>
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total-row">
+      <div class="cart-total-label">Total</div>
+      <div class="cart-total-val" id="cart-total">$0</div>
+    </div>
+    <button class="checkout-btn">Proceed to Checkout</button>
+    <button class="continue-btn" onclick="toggleCart()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✦ Added to your cart</div>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+document.addEventListener('mousemove',e=>{
+  cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';
+  ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';
+});
+document.querySelectorAll('button,a,.cat-card,.product-card,.nav-icon').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.3'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px';ring.style.opacity='.6'});
+});
+
+// CART
+let cartItems=[];
+function toggleCart(){
+  document.getElementById('cart-overlay').classList.toggle('open');
+  document.getElementById('cart-drawer').classList.toggle('open');
+}
+function addToCart(name,price){
+  const existing=cartItems.find(i=>i.name===name);
+  if(existing){existing.qty++}else{cartItems.push({name,price,qty:1,img:['cii1','cii2','cii3'][Math.floor(Math.random()*3)]})}
+  updateCart();showToast('✦ '+name+' added');
+}
+function updateCart(){
+  const list=document.getElementById('cart-items-list');
+  const footer=document.getElementById('cart-footer');
+  document.getElementById('cart-count').textContent=cartItems.reduce((s,i)=>s+i.qty,0);
+  if(!cartItems.length){
+    list.innerHTML='<div style="text-align:center;padding:60px 0;color:#8A8070"><div style="font-size:36px;margin-bottom:16px">🛍️</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:300;margin-bottom:8px">Your cart is empty</div><div style="font-size:12px">Add some beautiful pieces to get started</div></div>';
+    footer.style.display='none';return;
+  }
+  list.innerHTML=cartItems.map((item,i)=>`
+    <div class="cart-item">
+      <div class="cart-item-img ${item.img}"></div>
+      <div class="cart-item-details">
+        <div class="cart-item-brand">LUXE</div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">Size: M · Color: Natural</div>
+        <div class="cart-item-row">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+          </div>
+          <div class="cart-item-price">${item.price}</div>
+        </div>
+      </div>
+    </div>`).join('');
+  footer.style.display='block';
+  const total=cartItems.reduce((s,i)=>s+parseFloat(i.price.replace('$',''))*i.qty,0);
+  document.getElementById('cart-total').textContent='$'+total.toFixed(0);
+}
+function changeQty(i,d){
+  cartItems[i].qty+=d;
+  if(cartItems[i].qty<=0)cartItems.splice(i,1);
+  updateCart();
+}
+
+// TOAST
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// WISHLIST
+function toggleWish(btn){
+  btn.classList.toggle('wished');
+  btn.textContent=btn.classList.contains('wished')?'♥':'♡';
+  showToast(btn.classList.contains('wished')?'♥ Added to wishlist':'Removed from wishlist');
+}
+
+// FILTER
+function setFilter(btn,cat){
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card=>{
+    const show=cat==='all'||card.dataset.cat===cat||
+      (cat==='sale'&&card.querySelector('.price-old'));
+    card.style.display=show?'block':'none';
+    card.style.animation=show?'slideIn .4s forwards':'none';
+  });
+}
+
+// NEWSLETTER
+function subscribeNewsletter(){
+  const inp=document.querySelector('.newsletter-input');
+  if(inp.value.includes('@')){
+    showToast('✦ Welcome to The Edit!');inp.value='';
+  }else{showToast('Please enter a valid email')}
+}
+
+// REVEAL ON SCROLL
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// SMOOTH SCROLL
+function scrollTo(sel){document.querySelector(sel).scrollIntoView({behavior:'smooth'})}
+</script>
+</body>
+</html>
